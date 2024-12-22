@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# Conditional script
-if ./script1.sh; then
-  ./script2.sh
-  if ./script2.sh; then
-    ./script3.sh
-  fi
-fi
+# Run script1.sh
+./script1.sh
+
+# Run script2.sh
+./script2.sh
+
+# Run script3.sh in the background
+./script3.sh &
