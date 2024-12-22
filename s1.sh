@@ -15,7 +15,7 @@ echo "bind \"^Z\": suspend" >> ~/.inputrc
 xfce4-terminal &
 
 # Update the package list
-sudo pacman -Syy
+sudo pacman -Syy --noconfirm
 
 # Disable unnecessary services
 sudo systemctl disable alsa-restore.service
@@ -50,7 +50,7 @@ sudo systemctl enable openvpn
 sudo sed -i 's/ allow-overlay//g' /etc/security/limits.conf
 
 # Install basic security tools
-sudo pacman -S --noconfirm ufw apparmor clamav rkhunter
+sudo pacman -S --noconfirm ufw apparmor
 
 # Set up a firewall
 sudo ufw enable
@@ -65,15 +65,3 @@ sudo ufw reload
 sudo systemctl enable apparmor
 sudo systemctl start apparmor
 sudo aa-enforce /etc/apparmor.d/*
-
-# Update and patch the system
-sudo pacman -Syu --noconfirm
-
-# Patch and harden the kernel
-sudo pacman -S --noconfirm linux-hardened linux-hardened-headers
-
-# Scan for malware and rootkits
-sudo freshclam
-sudo rkhunter --propupd
-sudo clamscan -r /
-sudo rkhunter --checkall
