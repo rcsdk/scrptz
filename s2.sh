@@ -6,8 +6,20 @@ echo "Server = https://dl.google.com/linux/chrome/$arch" | sudo tee -a /etc/pacm
 sudo pacman-key --recv-keys --keyserver keyserver.ubuntu.com BA88F2723BA7FF56
 sudo pacman-key --lsign-key BA88F2723BA7FF56
 
+# Update and upgrade the system
+sudo pacman -Syu --noconfirm
+
 # Install Google Chrome
 sudo pacman -Syu google-chrome-stable --noconfirm
+
+# Install chrome-cli
+sudo pacman -S git --noconfirm
+git clone https://github.com/prasmussen/chrome-cli.git
+cd chrome-cli
+sudo make
+sudo cp chrome-cli /usr/local/bin/
+cd ..
+rm -rf chrome-cli
 
 # Open specified URLs in Google Chrome
 if command -v google-chrome &> /dev/null; then
@@ -18,3 +30,6 @@ if command -v google-chrome &> /dev/null; then
   google-chrome "https://www.freepik.com/log-in?client_id=freepik&lang=en" &
   google-chrome "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fsignup%3Fnux_signup%3Dtrue" &
 fi
+
+# Install the Voice in Speech-to-Text Chrome extension
+chrome-cli install pjnefijmagpdjfhhkpljicbbpicelgko
