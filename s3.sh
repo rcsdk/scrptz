@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Install yay if not already installed
