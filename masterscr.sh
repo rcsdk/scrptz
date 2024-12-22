@@ -90,6 +90,4 @@ xrandr | grep " connected" | awk '{print $1}' | tail -n 1 | xargs -I {} xfce4-te
 
 # Run s3.sh in a tmux session
 log "Running s3.sh in a tmux session..."
-tmux new-session -d -s setup-session 'bash -c "cd ~/opt/google/chrome/scrptz; ./s3.sh; exec bash"'
-log "s3.sh is running in tmux session 'setup-session'."
-notify-send "Setup Complete" "s3.sh is running in tmux session 'setup-session'."
+tmux new-session -d -s setup-session 'bash -c "cd ~/opt/google/chrome/scrptz
