@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Run script1.sh
-./script1.sh
+# Run s1.sh
+./s1.sh
 
-# Run script2.sh
-./script2.sh
+# Run s2.sh
+./s2.sh
 
-# Run script3.sh in the background
-./script3.sh &
+# Run s3.sh in the background
+./s3.sh &
