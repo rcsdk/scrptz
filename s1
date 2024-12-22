@@ -1,0 +1,53 @@
+
+-----
+
+
+disable my laptop trackpad as im using the mouse - and its annoying 
+
+-----
+
+
+sudo rm /var/lib/pacman/db.lc   - this i added because it took me long time to find out this command - which stops a bunch of repetead annoyances! I dont know what it is to be honest!
+
+-----
+
+customize terminal to use ctrl+c  ctrl+v - to copy paste and ctrl+z to interrupt/end processes on the terminal
+
+open the terminal
+
+
+------
+
+browsers are receiving overlays do deceive, on many sites, etc - which commamnds can we add here to control this layering mechanism, please research 2024 bootkits and malware that do this
+
+
+------
+
+installs google chrome usign wget using the process we just did  - 
+
+
+
+and then open these urls inside it:
+
+https://account.proton.me/login
+
+https://www.figma.com/login?locale=en-us
+
+https://auth.openai.com/authorize?audience=https%3A%2F%2Fapi.openai.com%2Fv1&client_id=TdJIcbe16WoTHtN95nyywh5E4yOo6ItG&country_code=BR&device_id=6fe36ba7-fec1-41db-9716-dd645aad1492&ext-oai-did=6fe36ba7-fec1-41db-9716-dd645aad1492&prompt=login&redirect_uri=https%3A%2F%2Fchatgpt.com%2Fapi%2Fauth%2Fcallback%2Fopenai&response_type=code&scope=openid+email+profile+offline_access+model.request+model.read+organization.read+organization.write&screen_hint=login&state=dOWxn_4hanMG8XzgAjY2fMQNW9INMGwBjujroshuVT0&flow=treatment
+
+
+https://venice.ai/chat/_xT7DNF0_-uaVdA-FVihq    - how to open venice on the login screen? is there a way to already fill in login pass? any other idea i go straight to logged area? and by the way same question for all these urls
+
+
+https://www.freepik.com/log-in?client_id=freepik&lang=en
+
+
+https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fsignup%3Fnux_signup%3Dtrue
+
+------
+
+ideally here we install the WHISPER tech for dictating for the computer - 
+
+------
+
+
