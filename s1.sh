@@ -28,6 +28,10 @@ sudo rm -f /var/lib/pacman/db.lck
 
 
 #Still to be done
+I need to create a user - user:rc pass:0000 - so i dont need to be root all the time
+
+
+#Still to be done
 install a browser - chrome or one that deals well with webgl so i can work on figma -
 open 5 tabs - with these urls already opened and logged in
 a nethod for me to add remove tabs in the future - also logged user pass
@@ -65,15 +69,10 @@ dmesg | grep -i firmware
 dmesg | grep -i xhci_pci
 pacman -S --noconfirm volatility
 pacman -S --noconfirm memdump
-pacman -S --noconfirm lios
-pacman -S --noconfirm crash
-pacman -S --noconfirm metasploit
-pacman -S --noconfirm dirty_cow
-pacman -S --noconfirm stage
 pacman -S --noconfirm gdisk
 pacman -S --noconfirm grub
 pacman -S --noconfirm mkinitcpio
-pacman -S pulseaudio
+pacman -S --noconfirm pulseaudio
 
 #Can be improved
 sudo pacman -Syu --noconfirm && sudo pacman -Syy --noconfirm
@@ -163,6 +162,17 @@ sudo pacman -S --noconfirm linux-hardened linux-hardened-headers
 
 
 
+###########
+FOR NEXT STEPS
+#############
+
+
+pacman -S --noconfirm lios
+pacman -S --noconfirm crash
+pacman -S --noconfirm metasploit
+pacman -S --noconfirm dirty_cow
+pacman -S --noconfirm stage
+
 
 
 # Add Google Chrome repository to Pacman
@@ -217,91 +227,7 @@ sudo rkhunter --checkall
 
 
 
-
-
-EDIT PACMAN: this is the clean
-nano /etc/pacman.conf
-
-
-
-# NOTE: You must run `pacman-key --init` before first using pacman; the local
-# keyring can then be populated with the keys of all official Arch Linux
-# packagers with `pacman-key --populate archlinux`.
-
-[options]
-HoldPkg     = pacman glibc
-SyncFirst   = pacman
-Architecture = auto
-
-[core]
-SigLevel    = Required DatabaseOptional
-Include     = /etc/pacman.d/mirrorlist
-
-[extra]
-SigLevel    = Required DatabaseOptional
-Include     = /etc/pacman.d/mirrorlist
-
-[community]
-SigLevel    = Required DatabaseOptional
-Include     = /etc/pacman.d/mirrorlist
-
-[multilib]
-SigLevel    = Required DatabaseOptional
-Include     = /etc/pacman.d/mirrorlist
-
-[archlinuxfr]
-SigLevel    = Optional TrustAll
-Server      = http://repo.archlinux.fr/$arch
-
-[herecura]
-SigLevel    = Optional TrustAll
-Server      = http://repo.herecura.be/herecura-stable/$arch
-
-[antergos]
-SigLevel    = Optional TrustAll
-Server      = http://repo.antergos.com/$arch/$repo
-
-#[google-chrome]
-#SigLevel    = Optional TrustAll
-#Server      = http://dl.google.com/linux/chrome/rpm/stable/$arch
-
-#[testing]
-#SigLevel    = Optional TrustAll
-#Include     = /etc/pacman.d/mirrorlist
-
-#[community-testing]
-#SigLevel    = Optional TrustAll
-#Include     = /etc/pacman.d/mirrorlist
-
-#[multilib-testing]
-#SigLevel    = Optional TrustAll
-#Include     = /etc/pacman.d/mirrorlist
-
-#[kde-unstable]
-#SigLevel    = Optional TrustAll
-#Include     = /etc/pacman.d/mirrorlist
-
-#[gnome-unstable]
-#SigLevel    = Optional TrustAll
-#Include     = /etc/pacman.d/mirrorlist
-
-#[erikreider]
-#SigLevel    = Optional TrustAll
-#Server      = http://pkgbuild.com/~erikreider/repo/$arch
-
-#[haskell]
-#SigLevel    = Optional TrustAll
-#Server      = http://archhaskell.mynerdside.com/$repo/$arch
-
-
-
-
-
-
-
-
-
-
+ t
 
 
 
@@ -370,7 +296,17 @@ sudo ufw allow http
 sudo ufw allow https
 sudo ufw reload
 
+
+recovery
+
 # Enable AppArmor
 sudo systemctl enable apparmor
 sudo systemctl start apparmor
 sudo aa-enforce /etc/apparmor.d/*
+
+
+
+flat smart tube trade dog empower ring rely cool marble lazy farm
+
+
+rcsdk proton phrase
