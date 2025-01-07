@@ -28,17 +28,17 @@ sudo rm -f /var/lib/pacman/db.lck
 
 
 #Still to be done
-install a browser - chrome or one that deals well with webgl so i can work on figma -
-open 5 tabs - with these urls already opened and logged in
-a nethod for me to add remove tabs in the future - also logged user pass
+#install a browser - chrome or one that deals well with webgl so i can work on figma -
+#open 5 tabs - with these urls already opened and logged in
+#a nethod for me to add remove tabs in the future - also logged user pass
 
 
 #Still to be done
-open firefox in private mode, and check all the variables on that advanced part to see if its hardened as much as possible (several fragile points there)
+#open firefox in private mode, and check all the variables on that advanced part to see if its hardened as much as possible (several fragile points there)
 
 
 #Still to be done
-fix audio certify that mic is working - install dictation - test - 
+#fix audio certify that mic is working - install dictation - test - 
 
 
 #I need to edit a tempered pacman.conf to be the best possible one adding mirrors including darker ones for pentesting, etc
@@ -73,7 +73,7 @@ pacman -S --noconfirm stage
 pacman -S --noconfirm gdisk
 pacman -S --noconfirm grub
 pacman -S --noconfirm mkinitcpio
-pacman -S pulseaudio
+pacman -S --noconfirm pulseaudio
 
 #Can be improved
 sudo pacman -Syu --noconfirm && sudo pacman -Syy --noconfirm
