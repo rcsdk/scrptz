@@ -41,7 +41,7 @@ sleep 1
 echo "Preparing pacman and limux's classics..."
 pacman-key --init
 gpg --check-trustdb
-pacman --Syy
+pacman -Syy
 pacman -Syu
 pacman -Sy
 #pacman -S --noconfirm linux
