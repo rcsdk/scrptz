@@ -35,6 +35,27 @@ sleep 1
 echo "Launching Firefox in private mode..."
 firefox --private &
 check_success "Firefox launched"
+sleep 1
+
+
+echo "Preparing pacman and limux's classics..."
+pacman-key --init
+gpg --check-trustdb
+pacman --Syy
+pacman -Syu
+pacman -Sy
+#pacman -S --noconfirm linux
+#pacman -S --noconfirm linux-firmware
+sudo rm -f /var/lib/pacman/db.lck
+pacman -S --noconfirm ufw
+sudo mkinitcpio -p linux
+sudo pacman -Syu
+lsmod | grep xhci_pci
+lsmod | grep ast
+lsmod | grep aic94xx
+lsmod | grep wd719x
+dmesg | grep -i firmware
+sleep 1
 
 
 #Please add more, if you know
