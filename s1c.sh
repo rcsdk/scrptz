@@ -37,6 +37,23 @@ firefox --private &
 check_success "Firefox launched"
 
 
+#Please add more, if you know
+echo "Disabling unecessary services..."
+sudo systemctl disable alsa-restore.service
+sudo systemctl disable getty@tty1.service
+sudo systemctl disable ip6tables.service
+sudo systemctl disable iptables.service
+sudo systemctl disable cups
+sudo systemctl disable avahi-daemon
+sudo systemctl disable bluetooth
+sudo systemctl mask alsa-restore.service
+sudo systemctl mask getty@tty1.service
+sudo systemctl mask ip6tables.service
+sudo systemctl mask iptables.service
+sudo systemctl mask cups
+sudo systemctl mask avahi-daemon
+sudo systemctl mask bluetooth
+sleep 1
 
 # Disable Debugging Interfaces
 sudo echo "kernel.dmesg_restrict=1" | sudo tee -a /etc/sysctl.conf
