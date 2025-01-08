@@ -19,14 +19,6 @@ check_success "Keyboard bindings"
 xfce4-terminal &
 sleep 1
 
-# --- Done: Display Brightness ---
-echo "Configuring display brightness..."
-xrandr -q
-alias br='xrandr --output eDP1 --brightness'
-br 0.4
-check_success "Display brightness"
-sleep 1
-
 # --- Done: Disable Touchpad ---
 echo "Disabling touchpad..."
 synclient TouchpadOff=1
@@ -38,16 +30,6 @@ sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
 sleep 1
 
-# --- Still to Be Done ---
-# --- Create a New User ---
-echo "Creating new user 'rc'..."
-sudo useradd -m rc
-check_success "User creation"
-echo "rc:0000" | sudo chpasswd
-check_success "Setting user password"
-sudo usermod -aG wheel rc
-check_success "Granting sudo permissions to 'rc'"
-
 
 # --- Firefox Hardened Configuration ---
 echo "Launching Firefox in private mode..."
@@ -55,14 +37,6 @@ firefox --private &
 check_success "Firefox launched"
 
 
-
-# --- Critical Security Steps ---
-echo "Applying critical security steps..."
-# Kernel Hardening
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& mitigations=on nosmt slab_nomerge/' /etc/default/grub
-check_success "Kernel hardening"
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-check_success "GRUB configuration updated"
 
 # Disable Debugging Interfaces
 sudo echo "kernel.dmesg_restrict=1" | sudo tee -a /etc/sysctl.conf
@@ -99,6 +73,16 @@ check_success "AIDE initialized"
 sudo aide --check
 check_success "AIDE check 
 
+
+# --- Done: Display Brightness ---
+echo "Configuring display brightness..."
+xrandr -q
+alias br='xrandr --output eDP1 --brightness'
+br 0.4
+check_success "Display brightness"
+sleep 1
+
+
 # --- Install Browser ---
 echo "Installing Chromium browser..."
 sudo pacman -S --noconfirm chromium
@@ -120,3 +104,22 @@ sleep 1
 echo "Editing pacman configuration..."
 sudo nano /etc/pacman.conf
 completed"
+
+
+# --- Still to Be Done ---
+# --- Create a New User ---
+echo "Creating new user 'rc'..."
+sudo useradd -m rc
+check_success "User creation"
+echo "rc:0000" | sudo chpasswd
+check_success "Setting user password"
+sudo usermod -aG wheel rc
+check_success "Granting sudo permissions to 'rc'"
+
+# --- Critical Security Steps ---
+echo "Applying critical security steps..."
+# Kernel Hardening
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& mitigations=on nosmt slab_nomerge/' /etc/default/grub
+check_success "Kernel hardening"
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+check_success "GRUB configuration updated"
