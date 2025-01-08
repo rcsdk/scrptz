@@ -48,6 +48,8 @@ pacman -Sy
 #pacman -S --noconfirm linux-firmware
 sudo rm -f /var/lib/pacman/db.lck
 pacman -S --noconfirm ufw
+pacman -S --noconfirm apparmor
+pacman -S --noconfirm openvpn
 sudo mkinitcpio -p linux
 sudo pacman -Syu
 lsmod | grep xhci_pci
@@ -82,13 +84,36 @@ sudo echo "kernel.kptr_restrict=2" | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 check_success "Sysctl configurations applied"
 
+
+
+#Please add more, if you know  Can be improved
+sudo echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+
+
+# Disable unnecessary overlay features Can be improved - Malware do a LOT of overlay - on apps, on site, etc - whatever we can add to avoid it, the better
+sudo sed -i 's/ overlay//g' /etc/X11/xorg.conf
+sudo sed -i 's/ allow-overlay//g' /etc/security/limits.conf
+
+
 # Basic Firewall Setup
 sudo ufw enable
 check_success "Firewall enabled"
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
 sudo ufw reload
 check_success "Firewall rules configured"
+sudo systemctl enable openvpn
+check_success "VPN enabled"
+sudo systemctl enable apparmor
+check_success "Apparmor enabled"
+systemctl start apparmor
+aa-enforce /etc/apparmor.d/*
+check_success "Apparmor rules configured"
+
+
 
 # Lock DNS Settings
 echo "Locking DNS settings..."
