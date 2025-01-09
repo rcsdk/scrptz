@@ -24,6 +24,10 @@ echo "Disabling touchpad..."
 synclient TouchpadOff=1
 check_success "Touchpad disabled"
 
+echo "Set timezone Sao Paulo"
+sudo timedatectl set-timezone America/Sao_Paulo
+sleep 1
+
 # --- Done: Remove Pacman Lock ---
 echo "Removing pacman database lock..."
 sudo rm -f /var/lib/pacman/db.lck
