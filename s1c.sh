@@ -24,9 +24,26 @@ echo "Disabling touchpad..."
 synclient TouchpadOff=1
 check_success "Touchpad disabled"
 
-echo "Set timezone Sao Paulo"
-sudo timedatectl set-timezone America/Sao_Paulo
+
+# Edit pacman
+nano /etc/pacman.conf
 sleep 1
+
+
+echo $FAKETIME
+unset FAKETIME
+ps aux | grep faketime
+grep faketime ~/.bashrc ~/.zshrc ~/.profile
+grep faketime /etc/profile.d/*
+kill -9 9394 9400
+grep faketime ~/.bashrc ~/.zshrc /etc/profile /etc/profile.d/*
+sudo pacman -R libfaketime
+sudo killall faketime
+
+
+
+
+
 
 # --- Done: Remove Pacman Lock ---
 echo "Removing pacman database lock..."
@@ -130,6 +147,84 @@ check_success "DNS settings locked"
 echo "Updating system packages..."
 sudo pacman -Syu --noconfirm
 check_success "System updated"
+
+
+
+=======================================================
+
+# /etc/pacman.conf
+
+# Global options
+[options]
+# Always ask for confirmation before installing, upgrading or removing packages
+# Uncomment the line below if you want to disable this behavior
+# NoConfirm
+
+# By default, pacman will use the fastest mirrors in your region.
+# You can increase speed by updating the mirrorlist to reflect the fastest
+# servers. For now, we'll use some reliable global mirrors.
+ParallelDownloads = 5        # Download up to 5 packages simultaneously
+Color = Always               # Color the output for better readability
+TotalDownload = Yes          # Show the total download size before confirming
+CheckSpace = Yes             # Check if there is enough space on disk before installing
+VerbosePkgLists = Yes        # Enable verbose package list when upgrading
+NoProgressBar = No           # Show progress bars during installations/updates
+
+# Use sigLevel 'Optional TrustAll' for keyring and avoid keyring problems
+SigLevel = Optional TrustAll
+LocalFileSigLevel = Optional
+
+# General repositories for Arch
+[core]
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+Include = /etc/pacman.d/mirrorlist
+
+[community]
+Include = /etc/pacman.d/mirrorlist
+
+# Arch User Repository (AUR)
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
+
+# Custom Repositories (You can add more here, such as other community repos)
+[myrepo]
+SigLevel = Optional TrustAll
+Server = https://repo.mysite.com/$arch
+
+# Mirrors
+# Uncomment or modify the mirrorlist as per your region and preference
+# It's good practice to uncomment the fastest mirrors first
+
+[mirrorlist]
+## Choose from these if you'd like
+# United States
+Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+Server = https://mirror.us.leaseweb.net/archlinux/$repo/os/$arch
+# Europe
+Server = https://mirror.hetzner.com/archlinux/$repo/os/$arch
+Server = https://archlinux.ikoula.com/$repo/os/$arch
+# Asia
+Server = https://mirror.sjtu.edu.cn/archlinux/$repo/os/$arch
+Server = https://ftp.yz.yamagata-u.ac.jp/pub/linux/archlinux/$repo/os/$arch
+
+# A good mirror set for reliable and fast connections
+Server = https://mirror.nl.leaseweb.net/archlinux/$repo/os/$arch
+Server = https://archlinux.thaller.ws/$repo/os/$arch
+Server = https://mirrors.kernel.org/archlinux/$repo/os/$arch
+
+# Keep these values as default for global use
+# Server = https://archlinux.mirror.ninja/$repo/os/$arch
+
+
+
+
+
+
+
+
 
 # Basic File Integrity Check
 echo "Initializing file integrity checks..."
