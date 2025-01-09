@@ -30,6 +30,15 @@ nano /etc/pacman.conf
 sleep 1
 
 
+sudo pacman -S reflector
+sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+
+# Edit Sysctl
+sudo nano /etc/sysctl.conf
+sudo sysctl -p
+sysctl -a | grep -E "dmesg_restrict|kptr_restrict|ip_forward|rp_filter|disable_ipv6"
+
+
 echo $FAKETIME
 unset FAKETIME
 ps aux | grep faketime
@@ -154,7 +163,6 @@ check_success "System updated"
 
 # /etc/pacman.conf
 
-# Global options
 [options]
 # Always ask for confirmation before installing, upgrading or removing packages
 # Uncomment the line below if you want to disable this behavior
@@ -163,12 +171,12 @@ check_success "System updated"
 # By default, pacman will use the fastest mirrors in your region.
 # You can increase speed by updating the mirrorlist to reflect the fastest
 # servers. For now, we'll use some reliable global mirrors.
-ParallelDownloads = 5        # Download up to 5 packages simultaneously
-Color = Always               # Color the output for better readability
-TotalDownload = Yes          # Show the total download size before confirming
-CheckSpace = Yes             # Check if there is enough space on disk before installing
-VerbosePkgLists = Yes        # Enable verbose package list when upgrading
-NoProgressBar = No           # Show progress bars during installations/updates
+ParallelDownloads = 5       # Download up to 5 packages simultaneously
+Color = Always              # Color the output for better readability
+TotalDownload = Yes         # Show the total download size before confirming
+CheckSpace = Yes            # Check if there is enough space on disk before installing
+VerbosePkgLists = Yes       # Enable verbose package list when upgrading
+NoProgressBar = No          # Show progress bars during installations/updates
 
 # Use sigLevel 'Optional TrustAll' for keyring and avoid keyring problems
 SigLevel = Optional TrustAll
@@ -219,9 +227,60 @@ Server = https://mirrors.kernel.org/archlinux/$repo/os/$arch
 # Server = https://archlinux.mirror.ninja/$repo/os/$arch
 
 
+=======================================================
+
+
+# Harden kernel parameters
+kernel.dmesg_restrict = 1
+kernel.kptr_restrict = 2
+
+# Disable IP forwarding (prevents routing traffic)
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+
+# Prevent source routing and redirects
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.all.secure_redirects = 0
+
+# Ignore ICMP echo requests
+net.ipv4.icmp_echo_ignore_all = 1
+net.ipv6.icmp.echo_ignore_all = 1
+
+# Disable SUID dumpable (prevents core dumps from setuid programs)
+fs.suid_dumpable = 0
+
+# Disable TCP timestamps (reduces tracking potential)
+net.ipv4.tcp_timestamps = 0
+
+# Prevent TCP sequence number prediction
+net.ipv4.tcp_rfc1337 = 1
+
+# Harden SYN flood handling
+net.ipv4.tcp_max_syn_backlog = 2048
+net.ipv4.tcp_synack_retries = 2
+net.ipv4.tcp_syn_retries = 3
+
+# Enable Reverse Path Filtering (security)
+net.ipv4.conf.all.rp_filter = 1
+
+# Disable unnecessary kernel modules
+kernel.modules_disabled = 1
+
+# Protect hardlinks and symlinks from hijacking
+fs.protected_hardlinks = 1
+fs.protected_symlinks = 1
+
+# Disable IPv6 completely (security measure)
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
 
 
 
+
+
+=======================================================
 
 
 
