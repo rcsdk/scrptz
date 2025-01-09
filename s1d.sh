@@ -19,6 +19,11 @@ check_success() {
 # xfce4-terminal &
 # sleep 1
 
+
+# Check the system specs
+inxi -Fxz
+
+
 # --- Done: Disable Touchpad ---
 echo "Disabling touchpad..."
 synclient TouchpadOff=1
@@ -44,6 +49,13 @@ sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pac
 sudo nano /etc/sysctl.conf
 sudo sysctl -p
 sysctl -a | grep -E "dmesg_restrict|kptr_restrict|ip_forward|rp_filter|disable_ipv6"
+
+
+# Edit Xorg
+sudo nano /etc/X11/xorg.conf
+
+
+
 
 
 echo $FAKETIME
@@ -284,6 +296,81 @@ net.ipv6.conf.default.disable_ipv6 = 1
 net.ipv6.conf.lo.disable_ipv6 = 1
 
 
+
+
+
+=======================================================
+
+
+# /etc/X11/xorg.conf
+
+
+
+# Server Layout - Defines primary display and input devices
+Section "ServerLayout"
+    Identifier     "Layout0"
+    Screen         0 "Screen0" 0 0
+    InputDevice    "Keyboard0" "CoreKeyboard"
+    InputDevice    "Mouse0" "CorePointer"
+EndSection
+
+# Keyboard Configuration - Adjust layout, model, and options
+Section "InputDevice"
+    Identifier     "Keyboard0"
+    Driver         "evdev"
+    Option         "XkbLayout" "us"
+    Option         "XkbModel" "pc105"
+    Option         "XkbOptions" "terminate:ctrl_alt_bksp"
+EndSection
+
+# Mouse Configuration - Adjust mouse settings
+Section "InputDevice"
+    Identifier     "Mouse0"
+    Driver         "evdev"
+    Option         "CorePointer"
+EndSection
+
+# Device Configuration - Configure GPU settings (Intel or other drivers)
+Section "Device"
+    Identifier     "Card0"
+    Driver         "modesetting"  # Default driver for Intel and hybrid graphics
+    Option         "NoAccel" "true"  # Disable hardware acceleration
+    Option         "AccelMethod" "none"  # Disable acceleration methods
+    Option         "RenderAccel" "false"  # Disable rendering acceleration
+    Option         "Overlay" "false"  # Disable overlay to prevent malicious overlays
+    Option         "TearFree" "true"  # Enable tear-free display for better performance
+    Option         "DRI" "3"  # Enable Direct Rendering Infrastructure 3 (improved performance)
+    Option         "Backlight" "true"  # Enable backlight control if supported
+EndSection
+
+# Screen Configuration - Set display settings (resolution, color depth)
+Section "Screen"
+    Identifier     "Screen0"
+    Device         "Card0"
+    DefaultDepth   24
+    SubSection     "Display"
+        Depth       24
+        Modes       "1920x1080"  # Adjust resolution as needed
+    EndSubSection
+EndSection
+
+# Module Loading - Load essential X11 modules
+Section "Module"
+    Load           "dbe"            # Double buffer extension
+    Load           "extmod"         # Extension module for additional functionality
+    Load           "record"         # Record extension for input event recording
+    Load           "dri"            # Direct Rendering Infrastructure
+    Load           "glx"            # OpenGL extension for rendering
+    Load           "vesa"           # Optional fallback driver for older hardware
+    Load           "xrandr"         # Enable dynamic screen resolution changes
+    Load           "evdev"          # Input driver for various devices (mouse, keyboard)
+    Load           "xinput"         # Input extension for fine control over input devices
+EndSection
+
+# Security: Disable indirect GLX connections for better security
+Section "Security"
+    Option         "AllowIndirectGLX" "off"  # Limit indirect GLX connections
+EndSection
 
 
 
