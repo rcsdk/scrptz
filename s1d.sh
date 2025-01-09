@@ -221,6 +221,47 @@ Include = /etc/pacman.d/mirrorlist
 [community]
 Include = /etc/pacman.d/mirrorlist
 
+# Uncomment the following for AUR support (optional)
+#[archlinuxfr]
+#SigLevel = Never
+#Server = http://repo.archlinux.fr/$arch
+
+
+
+
+
+
+# /etc/pacman.conf
+
+[options]
+# Always ask for confirmation before installing, upgrading or removing packages
+# Uncomment the line below if you want to disable this behavior
+# NoConfirm
+
+# By default, pacman will use the fastest mirrors in your region.
+# You can increase speed by updating the mirrorlist to reflect the fastest
+# servers. For now, we'll use some reliable global mirrors.
+ParallelDownloads = 5
+Color = Always
+TotalDownload = Yes
+CheckSpace = Yes
+VerbosePkgLists = Yes
+NoProgressBar = No
+
+# Use sigLevel 'Optional TrustAll' for keyring and avoid keyring problems
+SigLevel = Optional TrustAll
+LocalFileSigLevel = Optional
+
+# General repositories for Arch
+[core]
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+Include = /etc/pacman.d/mirrorlist
+
+[community]
+Include = /etc/pacman.d/mirrorlist
+
 # Arch User Repository (AUR)
 [archlinuxfr]
 SigLevel = Never
