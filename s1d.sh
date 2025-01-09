@@ -200,12 +200,12 @@ check_success "System updated"
 # By default, pacman will use the fastest mirrors in your region.
 # You can increase speed by updating the mirrorlist to reflect the fastest
 # servers. For now, we'll use some reliable global mirrors.
-ParallelDownloads = 5       # Download up to 5 packages simultaneously
-Color = Always              # Color the output for better readability
-TotalDownload = Yes         # Show the total download size before confirming
-CheckSpace = Yes            # Check if there is enough space on disk before installing
-VerbosePkgLists = Yes       # Enable verbose package list when upgrading
-NoProgressBar = No          # Show progress bars during installations/updates
+ParallelDownloads = 5
+Color = Always
+TotalDownload = Yes
+CheckSpace = Yes
+VerbosePkgLists = Yes
+NoProgressBar = No
 
 # Use sigLevel 'Optional TrustAll' for keyring and avoid keyring problems
 SigLevel = Optional TrustAll
