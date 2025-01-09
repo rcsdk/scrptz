@@ -11,13 +11,13 @@ check_success() {
 }
 
 # --- Done: Keyboard Bindings ---
-echo "Setting keyboard bindings..."
-echo "bind \"^C\": copy" >> ~/.inputrc
-echo "bind \"^V\": paste" >> ~/.inputrc
-echo "bind \"^Z\": suspend" >> ~/.inputrc
-check_success "Keyboard bindings"
-xfce4-terminal &
-sleep 1
+# echo "Setting keyboard bindings..."
+# echo "bind \"^C\": copy" >> ~/.inputrc
+# echo "bind \"^V\": paste" >> ~/.inputrc
+# echo "bind \"^Z\": suspend" >> ~/.inputrc
+# check_success "Keyboard bindings"
+# xfce4-terminal &
+# sleep 1
 
 # --- Done: Disable Touchpad ---
 echo "Disabling touchpad..."
