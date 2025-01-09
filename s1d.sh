@@ -24,6 +24,13 @@ echo "Disabling touchpad..."
 synclient TouchpadOff=1
 check_success "Touchpad disabled"
 
+# --- Done: Display Brightness ---
+echo "Configuring display brightness..."
+xrandr -q
+alias br='xrandr --output eDP1 --brightness'
+br 0.4
+sleep 1
+
 
 # Edit pacman
 nano /etc/pacman.conf
@@ -295,13 +302,7 @@ sudo aide --check
 check_success "AIDE check 
 
 
-# --- Done: Display Brightness ---
-echo "Configuring display brightness..."
-xrandr -q
-alias br='xrandr --output eDP1 --brightness'
-br 0.4
-check_success "Display brightness"
-sleep 1
+
 
 
 # --- Install Browser ---
