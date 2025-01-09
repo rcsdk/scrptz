@@ -54,6 +54,16 @@ sysctl -a | grep -E "dmesg_restrict|kptr_restrict|ip_forward|rp_filter|disable_i
 # Edit Xorg
 sudo nano /etc/X11/xorg.conf
 
+# Edit Limits
+sudo nano /etc/security/limits.conf
+add these lines: 
+*               soft    nofile          4096
+*               hard    nofile          8192
+*               hard    nproc           128
+*               soft    nproc           64
+
+
+
 
 
 
