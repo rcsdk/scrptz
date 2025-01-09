@@ -222,9 +222,9 @@ Include = /etc/pacman.d/mirrorlist
 Include = /etc/pacman.d/mirrorlist
 
 # Uncomment the following for AUR support (optional)
-#[archlinuxfr]
-#SigLevel = Never
-#Server = http://repo.archlinux.fr/$arch
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
 
 
 
