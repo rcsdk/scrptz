@@ -20,6 +20,11 @@ check_success() {
 # sleep 1
 
 
+sudo useradd -m rc
+echo "rc:0000" | sudo chpasswd
+sudo usermod -aG wheel rc
+
+
 # Check the system specs
 inxi -Fxz
 
@@ -439,6 +444,18 @@ EndSection
 
 
 
+sudo cp path/to/font.ttf /usr/share/fonts/
+
+Alternatively, organize your fonts in subdirectories for easier management:
+
+sudo mkdir -p /usr/share/fonts/custom
+sudo cp path/to/font.ttf /usr/share/fonts/custom/
+sudo fc-cache -f -v
+
+
+
+
+s
 # Basic File Integrity Check
 echo "Initializing file integrity checks..."
 sudo pacman -S --noconfirm aide
@@ -492,3 +509,50 @@ sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& mitigations=on nosmt slab_nom
 check_success "Kernel hardening"
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 check_success "GRUB configuration updated"
+
+
+
+
+
+
+Figma has now made a change to their web application so that the request for local fonts will not be made if your browser agent defined like the Linux version.
+
+Install
+Run this in your terminal
+
+curl -L https://raw.githubusercontent.com/Figma-Linux/figma-linux-font-helper/master/res/install.sh | bash
+How it works
+Font Helper is a simple http server which responds with a list of locally installed fonts upon request from Figma client. Figma sends an HTTP request to localhost upon loading to see which local fonts are available for usage in the Figma client
+
+How to add directories
+You can modify Font Helper config file with normal user privileges. The config is a simple JSON file which is located in ~/.config/figma-linux/settings.json
+
+nano ~/.config/figma-linux/settings.json
+After that You need to restart Font Helper service to apply the changes:
+
+systemctl --user restart figma-fonthelper.service
+Where to find logs
+The app put all logs into the /var/log/fonthelper directory. When Font Helper starts it create a new log file in the directory each time.
+
+Check Font Helper service status
+Just type this in terminal for check status of Font Helper:
+
+systemctl --user status figma-fonthelper.service
+Updating Font Helper
+Font Helper updates automatically via figma-fonthelper-updater.service service. You don't need to update Font Helper manually by default unless you have disabled the said service
+
+How to disable auto updates
+Disable the updater systemd service:
+
+systemctl --user stop figma-fonthelper-updater.service
+systemctl --user disable ffigma-onthelper-updater.service
+
+To enable auto update again:
+
+systemctl --user start figma-fonthelper-updater.service
+systemctl --user enable figma-fonthelper-updater.service
+Check your currently installed Font Helper version
+In terminal:
+
+
+
