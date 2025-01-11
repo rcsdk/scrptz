@@ -1,21 +1,38 @@
 
+on the part we create the user rc - after creating him, change to be him (or at the end of the script if easier)
 
-# --- Install Browser ---
-echo "Installing Chromium browser..."
 sudo pacman -S --noconfirm chromium
-check_success "Chromium installation"
-chromium --new-window "https://example-tab1.com" "https://example-tab2.com" &
-sleep 2
-
-create user rc and change to him
+chromium --new-window "https://example-tab1.com" 
 
 setup for figma - hardware acceleration? drivers? swap file? how to make it faster for figma?
 
-login user:evostrikey@gmail.com pass:St999444000)))%
+on chromium, login user:evostrikey@gmail.com pass:St999444000)))%
+
+on chromium, make it work only in english and only showing results from the US
 
 install plugins:
 https://chromewebstore.google.com/detail/proton-pass-free-password/ghmbeldphafepmbegfdlkpapadhbakde
 https://chromewebstore.google.com/detail/gofullpage-full-page-scre/fdpohaocaechififmbbbbbknoalclacl
+
+open incognito tabs - if possible - logged in already (vs me having to enter login pass each time)
+https://github.com/rcsdk
+user:rcsdk   pass:Rc000000@@
+
+https://account.proton.me/mail
+user:rcsdk   pass:Rc999888666%%%)
+
+https://www.freepik.com/log-in?client_id=freepik&lang=en
+user:rothier@gmail.com   pass:Maresmares2026!
+
+https://www.figma.com/
+user:rothier@gmail.com   pass:Rc000000%
+
+https://auth.openai.com (not sure if it works directly)
+user:rcsdk@proton.me   pass:rc1234567890
+
+https://venice.ai/sign-in#/?sign_up_fallback_redirect_url=https%3A%2F%2Fvenice.ai%2Fsign-up-migration&sign_in_fallback_redirect_url=https%3A%2F%2Fvenice.ai%2Fchat&redirect_url=https%3A%2F%2Fvenice.ai%2Fchat%2Fur6tk1jmbbgafuiuIuzln
+user:rothierdesign@yahoo.com   pass:Mar2025!
+
 
 
 
