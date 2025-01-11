@@ -7,6 +7,8 @@ check_success "Chromium installation"
 chromium --new-window "https://example-tab1.com" "https://example-tab2.com" &
 sleep 2
 
+create user rc and change to him
+
 
 
 
