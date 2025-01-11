@@ -9,6 +9,15 @@ sleep 2
 
 create user rc and change to him
 
+setup for figma - hardware acceleration? drivers? swap file? how to make it faster for figma?
+
+login user:evostrikey@gmail.com pass:St999444000)))%
+
+install plugins:
+https://chromewebstore.google.com/detail/proton-pass-free-password/ghmbeldphafepmbegfdlkpapadhbakde
+https://chromewebstore.google.com/detail/gofullpage-full-page-scre/fdpohaocaechififmbbbbbknoalclacl
+
+
 
 
 
