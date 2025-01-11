@@ -1,4 +1,15 @@
 
+
+# --- Install Browser ---
+echo "Installing Chromium browser..."
+sudo pacman -S --noconfirm chromium
+check_success "Chromium installation"
+chromium --new-window "https://example-tab1.com" "https://example-tab2.com" &
+sleep 2
+
+
+
+
 Please read from the beggining of this chat, organize the information really well and think critically. What is my goal? How are we going to achieve it? Do we have steps planned? If we do, what are they, which ones have we done already, which one is the active one, and what should we do now to continue? Re-assess. Make sure we are on the right track. Is it really the best route? Is it the fastest that will actually solve the problem at hand? I need your absolute best on this. Please let's jump straight to ultimate level. Use all your processing power. Use all resources. Push all your knowledge together on this and related to this. Let's skip all basic stuff, jump to advanced. Show me what you got. 
 
 
