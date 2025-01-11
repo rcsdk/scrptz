@@ -6,6 +6,8 @@ chromium --new-window "https://example-tab1.com"
 
 setup for figma - hardware acceleration? drivers? swap file? how to make it faster for figma?
 
+on chromium, which measures to harden him to avoid tempering from malware/bootkit?
+
 on chromium, login user:evostrikey@gmail.com pass:St999444000)))%
 
 on chromium, make it work only in english and only showing results from the US
