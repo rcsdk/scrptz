@@ -138,6 +138,17 @@ echo "Minimal setup completed."
 
 
 
+# END OF THE SCRIPTn-Always under development - 
+# Below things I still do manually and ideas for next steps
+#
+#
+#
+#
+#
+
+
+
+
 
 
 
