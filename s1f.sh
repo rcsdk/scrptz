@@ -171,7 +171,7 @@ sysctl -a | grep -E "dmesg_restrict|kptr_restrict|ip_forward|rp_filter|disable_i
 sudo nano /etc/X11/xorg.conf
 
 # Edit Limits
-sudo nano /etc/security/limits.conf
+sudo nano /etc/security/limits.confs
 add these lines: 
 *               soft    nofile          4096
 *               hard    nofile          8192
@@ -248,8 +248,15 @@ check_success "System updated"
 # Uncomment the line below if you want to disable this behavior
 # NoConfirm
 
-# This sets the number of simultaneous downloads (parallel downloads) for packages
+# By default, pacman will use the fastest mirrors in your region.
+# You can increase speed by updating the mirrorlist to reflect the fastest
+# servers. For now, we'll use some reliable global mirrors.
 ParallelDownloads = 5
+Color = Always
+TotalDownload = Yes
+CheckSpace = Yes
+VerbosePkgLists = Yes
+NoProgressBar = No
 
 # Use sigLevel 'Optional TrustAll' for keyring and avoid keyring problems
 SigLevel = Optional TrustAll
@@ -266,7 +273,46 @@ Include = /etc/pacman.d/mirrorlist
 Include = /etc/pacman.d/mirrorlist
 
 
+# Arch User Repository (AUR)
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
 
+# Custom Repositories (You can add more here, such as other community repos)
+[myrepo]
+SigLevel = Optional TrustAll
+Server = https://repo.mysite.com/$arch
+
+# Mirrors
+# Uncomment or modify the mirrorlist as per your region and preference
+# It's good practice to uncomment the fastest mirrors first
+
+[mirrorlist]
+## Choose from these if you'd like
+# United States
+Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+Server = https://mirror.us.leaseweb.net/archlinux/$repo/os/$arch
+
+# Europe
+Server = https://mirror.hetzner.com/archlinux/$repo/os/$arch
+Server = https://archlinux.ikoula.com/$repo/os/$arch
+
+# Asia
+Server = https://mirror.sjtu.edu.cn/archlinux/$repo/os/$arch
+Server = https://ftp.yz.yamagata-u.ac.jp/pub/linux/archlinux/$repo/os/$arch
+
+# A good mirror set for reliable and fast connections
+Server = https://mirror.nl.leaseweb.net/archlinux/$repo/os/$arch
+Server = https://archlinux.thaller.ws/$repo/os/$arch
+Server = https://mirrors.kernel.org/archlinux/$repo/os/$arch
+
+# Keep these values as default for global use
+# Server = https://archlinux.mirror.ninja/$repo/os/$arch
+
+
+
+
+=======================================================
 
 
 
