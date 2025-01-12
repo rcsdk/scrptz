@@ -90,4 +90,12 @@ echo "[Service]" | sudo tee -a /etc/systemd/system/pacman-updates.service
 echo "ExecStart=/usr/bin/pacman -Syu --noconfirm" | sudo tee -a /etc/systemd/system/pacman-updates.service
 sudo systemctl enable pacman-updates.timer
 
+
+chromium --new-window "https://github.com/login" & "https://venice.ai" & "https://freepik.com" & "https://figma.com" & "https://login.protonmail.com" --no-sandbox
+
+
+
+
+
+
 echo "Minimal setup completed."
