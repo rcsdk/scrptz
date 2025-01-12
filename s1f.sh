@@ -140,7 +140,7 @@ systemctl --user restart figma-fonthelper.service
 systemctl --user status figma-fonthelper.service
 
 
-chromium --new-window --incognito "https://github.com/login"
+chromium --new-window --incognito --no-sandbox "https://github.com/login"
 
 
 echo "Minimal setup completed."
