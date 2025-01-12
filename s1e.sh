@@ -8,6 +8,32 @@ inxi -Fxz
 # Set Time Zone to São Paulo
 sudo timedatectl set-timezone America/Sao_Paulo
 
+# Set Locale (if not set already)
+sudo localectl set-locale LANG=en_US.UTF-8
+
+pacman-key --init
+gpg --check-trustdb
+pacman -Syy
+pacman -Syu
+pacman -Sy
+
+sudo rm -f /var/lib/pacman/db.lck
+pacman -S --noconfirm ufw
+pacman -S --noconfirm apparmor
+pacman -S --noconfirm openvpn
+pacman -S --noconfirm chromium 
+pacman -S --noconfirm xorg-xinit
+pacman -S --noconfirm xorg
+
+sudo mkinitcpio -p linux
+sudo pacman -Syu
+lsmod | grep xhci_pci
+lsmod | grep ast
+lsmod | grep aic94xx
+lsmod | grep wd719x
+dmesg | grep -i firmware
+sleep 1
+
 
 sudo rm -f /var/lib/pacman/db.lck
 
@@ -96,8 +122,7 @@ sudo chmod 600 /etc/ssh/sshd_config  # Secure SSH config if using SSH
 # Clean Pacman Cache
 sudo pacman -Scc --noconfirm
 
-# Set Locale (if not set already)
-sudo localectl set-locale LANG=en_US.UTF-8
+
 
 # Enable automatic updates (via `pacman` or `systemd`)
 echo "[Timer]" | sudo tee /etc/systemd/system/pacman-updates.timer
