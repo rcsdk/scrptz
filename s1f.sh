@@ -123,7 +123,6 @@ sudo chmod 600 /etc/ssh/sshd_config  # Secure SSH config if using SSH
 sudo pacman -Scc --noconfirm
 
 
-
 # Enable automatic updates (via `pacman` or `systemd`)
 echo "[Timer]" | sudo tee /etc/systemd/system/pacman-updates.timer
 echo "OnBootSec=10min" | sudo tee -a /etc/systemd/system/pacman-updates.timer
@@ -133,7 +132,17 @@ echo "ExecStart=/usr/bin/pacman -Syu --noconfirm" | sudo tee -a /etc/systemd/sys
 sudo systemctl enable pacman-updates.timer
 
 
-chromium --new-window "https://github.com/login" & "https://venice.ai" & "https://freepik.com" & "https://figma.com" & "https://login.protonmail.com" --no-sandbox
+# Figma hooking with local fonts
+curl -L https://raw.githubusercontent.com/Figma-Linux/figma-linux-font-helper/master/res/install.sh | bash
+# nano ~/.config/figma-linux/settings.json
+systemctl --user restart figma-fonthelper.service
+#
+systemctl --user status figma-fonthelper.service
+
+
+chromium --new-window --incognito "https://github.com/login"
+
+
 echo "Minimal setup completed."
 
 
