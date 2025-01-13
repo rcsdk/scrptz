@@ -15,6 +15,10 @@ check_success() {
 sudo timedatectl set-timezone America/Sao_Paulo
 check_success "Timezone set"
 
+# Configure Display Brightness
+xrandr --output eDP1 --brightness 0.4
+check_success "Brightness adjusted"
+
 # Set Locale (if not set already)
 sudo localectl set-locale LANG=en_US.UTF-8
 check_success "Locale set"
@@ -42,8 +46,22 @@ pacman -S --noconfirm xorg
 check_success "Basic Packages installed"
 
 
+
+# Install monitoring tools
+pacman -S --noconfirm htop
+pacman -S --noconfirm iotop
+pacman -S --noconfirm nethogs
+pacman -S --noconfirm iftop
+pacman -S --noconfirm sysstat
+pacman -S --noconfirm auditd
+sudo pacman -S xfce4-whiskermenu-plugin
+
+check_success "Monitoring tools installed"
+
+
 sudo mkinitcpio -p linux
 check_success "mkinitcpio ran"
+
 
 sudo pacman -Syu
 check_success "System updated after mkinitcpio"
@@ -71,8 +89,7 @@ grep faketime ~/.bashrc ~/.zshrc /etc/profile /etc/profile.d/*
 sudo pacman -R libfaketime
 sudo killall faketime
 check_success "faketime removed"
-
-
+9
 
 
 # Add a user and set password
@@ -106,10 +123,6 @@ check_success "Basic Tools Installed"
 synclient TouchpadOff=1
 check_success "Touchpad disabled"
 
-
-# Configure Display Brightness
-xrandr --output eDP1 --brightness 0.4
-check_success "Brightness adjusted"
 
 # Harden Kernel Parameters
 cat <<EOF | sudo tee /etc/sysctl.d/99-custom.conf
@@ -204,11 +217,24 @@ check_success "Figma font helper restarted"
 # systemctl --user status figma-fonthelper.service
 
 # Open Chromium in Incognito mode
-chromium --new-window --incognito --no-sandbox "https://github.com/login"
+
+chromium --incognito
+--disable-background-networking
+--disable-default-apps
+--disable-sync
+--disable-translate
+--no-first-run
+--no-sandbox
+--force-device-scale-factor=1
+"https://github.com/login"
 check_success "Chromium launched"
 
 
 echo "Minimal setup completed."
+
+
+
+
 
 
 #!/bin/bash
