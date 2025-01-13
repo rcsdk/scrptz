@@ -190,9 +190,10 @@ check_success "Sudo timeout set"
 sudo chmod 600 /etc/ssh/sshd_config  # Secure SSH config if using SSH
 check_success "SSH config secured"
 
-# Clean Pacman Cache
-sudo pacman -Scc --noconfirm
-check_success "Pacman cache cleaned"
+
+# Secure important files
+sudo chmod 600 /etc/ssh/sshd_config  # Secure SSH config if using SSH
+
 
 # Enable automatic updates (via `pacman` or `systemd`)
 echo "[Timer]" | sudo tee /etc/systemd/system/pacman-updates.timer
@@ -201,22 +202,16 @@ echo "OnUnitActiveSec=1d" | sudo tee -a /etc/systemd/system/pacman-updates.timer
 echo "[Service]" | sudo tee -a /etc/systemd/system/pacman-updates.service
 echo "ExecStart=/usr/bin/pacman -Syu --noconfirm" | sudo tee -a /etc/systemd/system/pacman-updates.service
 sudo systemctl enable pacman-updates.timer
-check_success "Automatic updates enabled"
-
 
 
 # Figma hooking with local fonts
 curl -L https://raw.githubusercontent.com/Figma-Linux/figma-linux-font-helper/master/res/install.sh | bash
-check_success "Figma Font Helper installed"
-
 # nano ~/.config/figma-linux/settings.json
-
 systemctl --user restart figma-fonthelper.service
-check_success "Figma font helper restarted"
+#
+systemctl --user status figma-fonthelper.service
 
-# systemctl --user status figma-fonthelper.service
 
-# Open Chromium in Incognito mode
 
 chromium --incognito
 --disable-background-networking
@@ -227,10 +222,34 @@ chromium --incognito
 --no-sandbox
 --force-device-scale-factor=1
 "https://github.com/login"
-check_success "Chromium launched"
+
+
+
+# Clean Pacman Cache
+sudo pacman -Scc --noconfirm
+check_success "Pacman cache cleaned"
 
 
 echo "Minimal setup completed."
+
+
+
+# END OF THE SCRIPTn-Always under development - 
+# Below things I still do manually and ideas for next steps
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
 
 
 
