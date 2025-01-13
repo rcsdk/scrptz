@@ -413,6 +413,8 @@ Server = http://mirror.pkgbuild.com/$repo/os/x86_64
 =======================================================
 
 
+kernel.unprivileged_bpf_disabled=1 kernel.yama.ptrace_scope=2 vm.swappiness=10 vm.vfs_cache_pressure=50 Startup Management:
+
 # Harden kernel parameters
 kernel.dmesg_restrict = 1
 kernel.kptr_restrict = 2
