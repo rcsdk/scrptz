@@ -23,6 +23,9 @@ user:rcsdk   pass:Rc000000@@
 https://account.proton.me/mail
 user:rcsdk   pass:Rc999888666%%%)
 
+https://account.proton.me/pass
+user:rcsdk   pass:Rc999888666%%%)
+
 https://www.freepik.com/log-in?client_id=freepik&lang=en
 user:rothier@gmail.com   pass:Maresmares2026!
 
@@ -34,6 +37,12 @@ user:rcsdk@proton.me   pass:rc1234567890
 
 https://venice.ai/sign-in#/?sign_up_fallback_redirect_url=https%3A%2F%2Fvenice.ai%2Fsign-up-migration&sign_in_fallback_redirect_url=https%3A%2F%2Fvenice.ai%2Fchat&redirect_url=https%3A%2F%2Fvenice.ai%2Fchat%2Fur6tk1jmbbgafuiuIuzln
 user:rothierdesign@yahoo.com   pass:Mar2025!
+
+https://mega.nz/login
+user:evostrikey@gmail.com    pass:EV0%079!!!!!*a
+
+
+
 
 
 
