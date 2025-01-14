@@ -43,20 +43,24 @@ pacman -S --noconfirm openvpn
 pacman -S --noconfirm chromium 
 pacman -S --noconfirm xorg-xinit
 pacman -S --noconfirm xorg
+pacman -S --noconfirm mesa
+pacman -S --noconfirm intel-media-driver
+check_success "Basic Tools Installed"
+
 check_success "Basic Packages installed"
 
 
 
 # Install monitoring tools
-pacman -S --noconfirm htop
-pacman -S --noconfirm iotop
-pacman -S --noconfirm nethogs
-pacman -S --noconfirm iftop
-pacman -S --noconfirm sysstat
-pacman -S --noconfirm auditd
-sudo pacman -S xfce4-whiskermenu-plugin
+# pacman -S --noconfirm htop
+# pacman -S --noconfirm iotop
+# pacman -S --noconfirm nethogs
+# pacman -S --noconfirm iftop
+# pacman -S --noconfirm sysstat
+# pacman -S --noconfirm auditd
+# sudo pacman -S xfce4-whiskermenu-plugin
 
-check_success "Monitoring tools installed"
+# check_success "Monitoring tools installed"
 
 
 sudo mkinitcpio -p linux
@@ -116,8 +120,8 @@ check_success "Mirrors configured"
 
 
 # Install basic tools
-sudo pacman -S --noconfirm xorg xorg-xinit chromium mesa intel-media-driver ufw
-check_success "Basic Tools Installed"
+# sudo pacman -S --noconfirm xorg xorg-xinit chromium mesa intel-media-driver ufw
+# check_success "Basic Tools Installed"
 
 # Disable Touchpad
 synclient TouchpadOff=1
@@ -212,10 +216,8 @@ systemctl --user restart figma-fonthelper.service
 systemctl --user status figma-fonthelper.service
 
 
-
 chromium --incognito --disable-background-networking --disable-default-apps --disable-sync --disable-translate --no-first-run --no-sandbox --force-device-scale-factor=1 --disable-gpu-sandbox --enable-native-gpu-memory-buffers --use-gl=desktop --use-cmd-decoder=validating --disable-software-rasterizer --disable-font-subpixel-positioning --disable-gpu-driver-bug-workarounds --disable-gpu-driver-workarounds --disable-gpu-vsync --enable-accelerated-video-decode --enable-accelerated-mjpeg-decode --enable-features=VaapiVideoDecoder,CanvasOopRasterization --enable-gpu-compositing --enable-gpu-rasterization --enable-native-gpu-memory-buffers --enable-oop-rasterization --canvas-oop-rasterization --enable-raw-draw --use-vulkan --enable-zero-copy --ignore-gpu-blocklist --disable-gpu-driver-bug-workarounds
 "https://github.com/login"
-
 
 
 # Clean Pacman Cache
@@ -224,7 +226,6 @@ check_success "Pacman cache cleaned"
 
 
 echo "Minimal setup completed."
-
 
 
 # END OF THE SCRIPTn-Always under development - 
