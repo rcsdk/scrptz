@@ -31,9 +31,7 @@ pacman-key --init
 gpg --check-trustdb
 check_success "Pacman keyring initialized"
 
-pacman --noconfirm -Syy
 pacman --noconfirm -Syu
-pacman --noconfirm -Sy
 check_success "Pacman updated"
 
 sudo rm -f /var/lib/pacman/db.lck
