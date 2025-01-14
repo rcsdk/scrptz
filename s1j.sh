@@ -45,10 +45,11 @@ pacman -S --noconfirm xorg-xinit
 pacman -S --noconfirm xorg
 pacman -S --noconfirm mesa
 pacman -S --noconfirm intel-media-driver
+pacman -S --noconfirm zramswap
+pacman -S --noconfirm thermald
+pacman -S --noconfirm tlp
+
 check_success "Basic Tools Installed"
-
-check_success "Basic Packages installed"
-
 
 
 # Install monitoring tools
@@ -93,7 +94,6 @@ grep faketime ~/.bashrc ~/.zshrc /etc/profile /etc/profile.d/*
 sudo pacman -R libfaketime
 sudo killall faketime
 check_success "faketime removed"
-9
 
 
 # Add a user and set password
@@ -138,13 +138,20 @@ check_success "Kernel parameters set"
 
 # Enable and configure UFW (Firewall)
 sudo systemctl enable --now ufw
-check_success "UFW enabled"
-
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow ssh
 sudo ufw reload
-check_success "UFW rules configured"
+check_success "UFW enabled"
+
+
+# Enable and configure ZRAM + Thermaid + TLP
+sudo systemctl enable zramswap.service
+sudo systemctl start zramswap.service
+sudo systemctl enable --now thermald
+sudo systemctl enable --now tlp
+check_success "ZRAM enabled"
+
 
 # Disable unnecessary services (Bluetooth, Printer, etc.)
 sudo systemctl disable alsa-restore.service
