@@ -1,5 +1,17 @@
 
 
+chromium --incognito  --disable-background-networking  --disable-default-apps  --disable-sync  --disable-translate  --no-first-run  --no-sandbox  --force-device-scale-factor=1  --disable-gpu-sandbox --enable-native-gpu-memory-buffers
+
+
+
+chromium --incognito  --disable-background-networking  --disable-default-apps  --disable-sync  --disable-translate  --no-first-run  --no-sandbox  --force-device-scale-factor=1  --disable-gpu-sandbox --enable-native-gpu-memory-buffers --use-gl=desktop  --use-cmd-decoder=validating  --disable-software-rasterizer  --disable-font-subpixel-positioning  --disable-gpu-driver-bug-workarounds --disable-gpu-driver-workarounds  --disable-gpu-vsync  --enable-accelerated-video-decode  --enable-accelerated-mjpeg-decode  --enable-features=VaapiVideoDecoder,CanvasOopRasterization  --enable-gpu-compositing  --enable-gpu-rasterization  --enable-native-gpu-memory-buffers  --enable-oop-rasterization  --canvas-oop-rasterization  --enable-raw-draw  --use-vulkan  --enable-zero-copy  --ignore-gpu-blocklist  --disable-gpu-driver-bug-workarounds
+
+
+
+
+
+
+
 
 Script Organization and Structure:
 Consolidate the multiple script versions (s1.sh through s1f.sh) into a single, modular script
