@@ -1,4 +1,7 @@
 
+NKSCAPE
+https://inkscape.org/release/1.4/gnulinux/
+
 
 chromium --incognito  --disable-background-networking  --disable-default-apps  --disable-sync  --disable-translate  --no-first-run  --no-sandbox  --force-device-scale-factor=1  --disable-gpu-sandbox --enable-native-gpu-memory-buffers
 
