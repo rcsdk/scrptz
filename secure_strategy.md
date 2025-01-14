@@ -1,3 +1,33 @@
+sorry didnt explain myself correctly - yes I did boot from my USB stick and Ive been doing this for days, once its working - in the sense I can work as a designer - on RAM (i have 16gb) - so I am intending to keep it as is - unless you tell me otherwise. on every single load of the USB - bootkit completely tampers the loading process. I see all the errors he creates on the screen. My goal here is to create a loading process h cannot temper. Possible? Makes sense? 
+
+i dont have access to bios, bootkit added a pass. work with me as an expert giving me sequences of commands so you can assess what you need. think critically. im on sys rescue on ram and i want to keep it like this for now. if you see anything about fedora - it was a ruined installation and we can clean everything - there is no data anymore in the hd. 
+
+i ran diagnostics - can u give me the next steps to harden boot rEFInd? take us to ultimate level and work as a very experienced expert protecting me againsft a deep bootkit. think critically and strategically. ill send you diaginotics in parts - wait till i say im done ok
+
+
+
+thats IT! Lets roll. Give me the ULTIMATE solutions please. Your best.
+
+
+
+this is refind.conf now - can you pleas analyse - add all you want and give me back a complete one i just need to replace? 
+
+
+
+i ran diagnostics - can u give me the next steps to harden boot rEFInd? take us to ultimate level and work as a very experienced expert protecting me againsft a deep bootkit. think critically and strategically.   
+
+yes I did boot from my USB stick and Ive been doing this for days, once its working - in the sense I can work as a designer - on RAM (i have 16gb) - so I am intending to keep it as is - unless you tell me otherwise. on every single load of the USB - bootkit completely tampers the loading process. I see all the errors he creates on the screen. My goal here is to create a loading process h cannot temper. Possible? Makes sense? 
+
+i dont have access to bios, bootkit added a pass. work with me as an expert giving me sequences of commands so you can assess what you need. think critically. im on sys rescue on ram and i want to keep it like this for now. if you see anything about fedora - it was a ruined installation and we can clean everything - there is no data anymore in the hd. 
+
+i ran diagnostics - can u give me the next steps to harden boot rEFInd? take us to ultimate level and work as a very experienced expert protecting me againsft a deep bootkit. think critically and strategically.  
+
+
+
+
+
+
+
 Here’s a complete reassessment of your situation, goals, and strategy. I’ll analyze everything critically, consolidate the information, ensure we’re on the best possible route, and present the most advanced, comprehensive plan to address your bootkit problem and secure your environment.
 
 ---
