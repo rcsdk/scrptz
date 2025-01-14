@@ -65,18 +65,42 @@ sudo pacman -R --noconfirm libfaketime
 sudo killall faketime 2>/dev/null
 check_success "faketime removed"
 
+
 # Add a user and set password
 sudo useradd -m rc
 check_success "User rc created"
 
-echo "Set password for rc user:"
-sudo passwd rc
+echo "rc:0000" | sudo chpasswd
 check_success "Password for rc set"
 
 sudo usermod -aG wheel rc
 check_success "User rc added to wheel group"
 
-# Update system and configure mirrors
+# Add rc to sudoers
+echo "Adding rc to sudoers..."
+if sudo grep -q "^rc " /etc/sudoers; then
+    echo "rc is already in sudoers. Skipping."
+else
+    echo "rc ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/rc >/dev/null
+    sudo chmod 440 /etc/sudoers.d/rc
+    check_success "User rc added to sudoers with passwordless sudo access"
+fi
+
+
+
+# Add a user and set password
+#sudo useradd -m rc
+#check_success "User rc created"
+#
+#echo "rc:0000" | sudo chpasswd
+#check_success "Password for rc set"
+#
+#sudo usermod -aG wheel rc
+#check_success "User rc added to wheel group"
+#
+#
+
+Udate system and configure mirrors
 sudo pacman -S --noconfirm reflector
 check_success "Reflector installed"
 
