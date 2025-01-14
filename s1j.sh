@@ -28,16 +28,16 @@ pacman-key --init
 gpg --check-trustdb
 check_success "Pacman keyring initialized"
 
-pacman -Syy
-pacman -Syu
-pacman -Sy
+pacman --noconfirm -Syy
+pacman --noconfirm -Syu
+pacman ---noconfirm Sy
 check_success "Pacman updated"
 
 
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
 
-pacman -S --noconfirm ufw
+pacman -S C ufw
 pacman -S --noconfirm apparmor
 pacman -S --noconfirm openvpn
 pacman -S --noconfirm chromium 
@@ -67,7 +67,7 @@ sudo mkinitcpio -p linux
 check_success "mkinitcpio ran"
 
 
-sudo pacman -Syu
+sudo pacman -Syu 
 check_success "System updated after mkinitcpio"
 
 lsmod | grep xhci_pci
