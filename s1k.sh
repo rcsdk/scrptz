@@ -26,6 +26,13 @@ check_success "Brightness adjusted"
 sudo localectl set-locale LANG=en_US.UTF-8
 check_success "Locale set"
 
+fallocate -l 16G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo "/swapfile none swap sw 0 0" >> /etc/fstab 
+
+
 # Pacman basics
 pacman-key --init
 gpg --check-trustdb
