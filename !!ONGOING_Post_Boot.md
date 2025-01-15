@@ -1,5 +1,21 @@
 
-NKSCAPE
+
+**CLEAR CACHE MEMORY**
+To clear the cache from memory on Linux, you can use the following command:
+
+bash
+Copy code
+echo 3 | sudo tee /proc/sys/vm/drop_caches
+This command tells the kernel to drop clean caches, dentries, and inodes. Here's a breakdown of the command:
+
+echo 3: The number 3 represents dropping page cache, dentries, and inodes.
+sudo tee /proc/sys/vm/drop_caches: This writes the value to /proc/sys/vm/drop_caches to drop the cache.
+
+
+
+
+
+INKSCAPE
 https://inkscape.org/release/1.4/gnulinux/
 
 
