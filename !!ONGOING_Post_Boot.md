@@ -1,4 +1,18 @@
 
+https://inkscape.org/release/inkscape-1.0beta2/gnulinux/appimage/dl/
+
+https://www.gimp.org/downloads/
+https://krita.org/en/download/
+
+
+
+https://fontba.se/
+
+
+https://icons8.com/
+[https://icons8.com/
+](https://www.flaticon.com/)
+
 
 **inxi -Fxz**
 whole configuration
