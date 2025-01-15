@@ -1,7 +1,18 @@
 
+
+
+
+
+
+
+
+
+
+
+
 chromium --incognito    --disable-background-networking     --disable-default-apps \
     --disable-sync     --disable-translate  --no-first-run  -no-sandbo   --force-device-scale-factor=1   --disable-software-rasterizer    --enable-accelerated-video-decode    --enable-accelerated-mjpeg-decode     --use-gl=desktop     --use-vulkan    --enable-native-gpu-memory-buffers  --canvas-oop-rasterization
-    
+      
     
     
     
@@ -16,9 +27,9 @@ https://krita.org/en/download/
 https://fontba.se/
 
 
-https://icons8.com/
-[https://icons8.com/
-](https://www.flaticon.com/)
+https://icons8.com
+https://icons8.com
+https://www.flaticon.com
 
 
 **inxi -Fxz**
