@@ -1,4 +1,11 @@
 
+chromium --incognito    --disable-background-networking     --disable-default-apps \
+    --disable-sync     --disable-translate  --no-first-run  -no-sandbo   --force-device-scale-factor=1   --disable-software-rasterizer    --enable-accelerated-video-decode    --enable-accelerated-mjpeg-decode     --use-gl=desktop     --use-vulkan    --enable-native-gpu-memory-buffers  --canvas-oop-rasterization
+    
+    
+    
+    
+    
 https://inkscape.org/release/inkscape-1.0beta2/gnulinux/appimage/dl/
 
 https://www.gimp.org/downloads/
