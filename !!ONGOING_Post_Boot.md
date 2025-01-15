@@ -1,5 +1,11 @@
 
 
+**inxi -Fxz**
+whole configuration
+
+
+
+
 **CLEAR CACHE MEMORY**
 To clear the cache from memory on Linux, you can use the following command:
 
