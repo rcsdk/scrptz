@@ -34,51 +34,34 @@ else
     check_success "Adding rc to sudoers"
 fi
 
-
-
-
 # Pacman basics
 sudo pacman-key --init
 check_success "Pacman keyring initialized"
-
-sudo pacman -Syu
-check_success "Pacman updated"
-
-sudo rm -f /var/lib/pacman/db.lck
-check_success "Pacman lock removed"
-
-# Install basic tools
-sudo pacman -S --noconfirm --needed reflector
-check_success "Basic Packages installed"
 
 # Ensure the /etc/pacman.d directory exists
 sudo mkdir -p /etc/pacman.d
 check_success "pacman.d directory created"
 
-# Install reflector
-sudo pacman -S --noconfirm reflector
-check_success "Reflector installed"
+# Manual step to update mirrorlist
+echo "Manually updating mirrorlist..."
+sudo tee /etc/pacman.d/mirrorlist > /dev/null <<EOF
+Server = https://mirrors.kernel.org/archlinux/\$repo/os/\$arch
+Server = https://mirror.rackspace.com/archlinux/\$repo/os/\$arch
+EOF
+check_success "Mirrorlist manually updated"
 
-# Generate the mirrorlist using reflector
-sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-check_success "Mirrorlist created"
-
-
-# Replace /etc/pacman.conf with the new configuration
+# Update pacman configuration
 sudo tee /etc/pacman.conf > /dev/null <<EOF
 [options]
-# Pacman settings
 Architecture = auto
 ParallelDownloads = 5
 Color
 CheckSpace
 VerbosePkgLists
 
-# Use sigLevel 'Required DatabaseOptional' for keyring and avoid keyring problems
 SigLevel = Required DatabaseOptional
 LocalFileSigLevel = Optional
 
-# General repositories for Arch
 [core]
 Include = /etc/pacman.d/mirrorlist
 
@@ -86,31 +69,25 @@ Include = /etc/pacman.d/mirrorlist
 Include = /etc/pacman.d/mirrorlist
 
 [community]
-Include = /etc.pacman.d/mirrorlist
-
-# Custom Repositories
-[myrepo]
-SigLevel = Optional TrustAll
-Server = https://repo.mysite.com/\$arch
-
-# Mirrors (United States)
-Server = https://mirror.rackspace.com/archlinux/\$repo/os/\$arch
-Server = https://mirror.us.leaseweb.net/archlinux/\$repo/os/\$arch
-
-# Mirrors (Europe)
-Server = https://mirror.hetzner.com/archlinux/\$repo/os/\$arch
-Server = https://archlinux.ikoula.com/\$repo/os/\$arch
-
-# Mirrors (Asia)
-Server = https://mirror.sjtu.edu.cn/archlinux/\$repo/os/\$arch
-Server = https://ftp.yz.yamagata-u.ac.jp/pub/linux/archlinux/\$repo/os/\$arch
-
-# A good mirror set for reliable and fast connections
-Server = https://mirror.nl.leaseweb.net/archlinux/\$repo/os/\$arch
-Server = https://archlinux.thaller.ws/\$repo/os/\$arch
-Server = https://mirrors.kernel.org/archlinux/\$repo/os/\$arch
+Include = /etc/pacman.d/mirrorlist
 EOF
 check_success "pacman.conf replaced"
+
+# Update system
+sudo pacman -Syu
+check_success "Pacman updated"
+
+# Remove pacman lock if present
+sudo rm -f /var/lib/pacman/db.lck
+check_success "Pacman lock removed"
+
+# Install basic tools
+sudo pacman -S --noconfirm --needed reflector
+check_success "Basic Packages installed"
+
+# Generate the mirrorlist using reflector
+sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+check_success "Mirrorlist created"
 
 # Update /etc/security/limits.conf
 sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
@@ -120,47 +97,6 @@ sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
 *               soft    nproc           64
 EOF
 check_success "limits.conf updated"
-
-# Replace /etc/sysctl.conf with the new configuration
-sudo tee /etc/sysctl.conf > /dev/null <<EOF
-kernel.unprivileged_bpf_disabled=1
-kernel.yama.ptrace_scope=2
-vm.swappiness = 10
-vm.vfs_cache_pressure = 50
-
-# Harden kernel parameters
-kernel.dmesg_restrict = 1
-kernel.kptr_restrict = 2
-net.ipv4.ip_forward = 0
-net.ipv6.conf.all.forwarding = 0
-net.ipv4.conf.all.accept_source_route = 0
-net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.conf.all.secure_redirects = 0
-net.ipv4.icmp_echo_ignore_all = 1
-net.ipv6.icmp.echo_ignore_all = 1
-fs.suid_dumpable = 0
-net.ipv4.tcp_timestamps = 0
-net.ipv4.tcp_rfc1337 = 1
-net.ipv4.tcp_max_syn_backlog = 2048
-net.ipv4.tcp_synack_retries = 2
-net.ipv4.tcp_syn_retries = 3
-net.ipv4.conf.all.rp_filter = 1
-kernel.modules_disabled = 1
-fs.protected_hardlinks = 1
-fs.protected_symlinks = 1
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-net.ipv6.conf.lo.disable_ipv6 = 1
-EOF
-check_success "sysctl.conf replaced"
-
-# Update /etc/security/limits.conf
-sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
-*               soft    nofile          4096
-*               hard    nofile          8192
-*               hard    nproc           128
-*               soft    nproc           64
-EOF
 
 # Replace /etc/sysctl.conf with the new configuration
 sudo tee /etc/sysctl.conf > /dev/null <<EOF
@@ -253,8 +189,13 @@ check_success "System updated"
 sudo pacman -S --noconfirm reflector
 check_success "Reflector installed"
 
-sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-check_success "Mirrors configured"
+# Manual step to configure mirrors
+echo "Manually configuring mirrors..."
+sudo tee /etc/pacman.d/mirrorlist > /dev/null <<EOF
+Server = https://mirrors.kernel.org/archlinux/\$repo/os/\$arch
+Server = https://mirror.rackspace.com/archlinux/\$repo/os/\$arch
+EOF
+check_success "Mirrors manually configured"
 
 # Disable Touchpad
 synclient TouchpadOff=1
@@ -269,13 +210,7 @@ sudo sysctl --system
 check_success "Kernel parameters set"
 
 # Enable and configure UFW (Firewall)
-sudo systemctl enable --now ufw
-check_success "UFW enabled"
-
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow ssh
-sudo ufw reload
+CC
 check_success "UFW rules configured"
 
 # Disable and mask unnecessary services
@@ -306,10 +241,16 @@ sudo aa-enforce /etc/apparmor.d/*
 check_success "Apparmor configured"
 
 # Set DNS to Cloudflare for privacy
-echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
-echo "nameserver 9.9.9.9" | sudo tee -a /etc/resolv.conf
+echo "Setting DNS to Cloudflare for privacy..."
+sudo tee /etc/resolv.conf > /dev/null <<EOF
+nameserver 1.1.1.1
+nameserver 9.9.9.9
+EOF
+check_success "DNS set to Cloudflare"
+
+# Lock the DNS configuration
 sudo chattr +i /etc/resolv.conf
-check_success "DNS set and locked"
+check_success "DNS configuration locked"
 
 # Configure Sudo timeout
 echo 'Defaults timestamp_timeout=5' | sudo tee -a /etc/sudoers
