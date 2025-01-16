@@ -116,6 +116,77 @@ EOF
 
 
 
+# Update /etc/security/limits.conf
+sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
+*               soft    nofile          4096
+*               hard    nofile          8192
+*               hard    nproc           128
+*               soft    nproc           64
+EOF
+
+
+
+# Replace /etc/sysctl.conf with the new configuration
+sudo tee /etc/sysctl.conf > /dev/null <<EOF
+kernel.unprivileged_bpf_disabled=1
+kernel.yama.ptrace_scope=2
+vm.swappiness = 10
+vm.vfs_cache_pressure = 50
+
+# Harden kernel parameters
+kernel.dmesg_restrict = 1
+kernel.kptr_restrict = 2
+
+# Disable IP forwarding (prevents routing traffic)
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+
+# Prevent source routing and redirects
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.all.secure_redirects = 0
+
+# Ignore ICMP echo requests
+net.ipv4.icmp_echo_ignore_all = 1
+net.ipv6.icmp.echo_ignore_all = 1
+
+# Disable SUID dumpable (prevents core dumps from setuid programs)
+fs.suid_dumpable = 0
+
+# Disable TCP timestamps (reduces tracking potential)
+net.ipv4.tcp_timestamps = 0
+
+# Prevent TCP sequence number prediction
+net.ipv4.tcp_rfc1337 = 1
+
+# Harden SYN flood handling
+net.ipv4.tcp_max_syn_backlog = 2048
+net.ipv4.tcp_synack_retries = 2
+net.ipv4.tcp_syn_retries = 3
+
+# Enable Reverse Path Filtering (security)
+net.ipv4.conf.all.rp_filter = 1
+
+# Disable unnecessary kernel modules
+kernel.modules_disabled = 1
+
+# Protect hardlinks and symlinks from hijacking
+fs.protected_hardlinks = 1
+fs.protected_symlinks = 1
+
+# Disable IPv6 completely (security measure)
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOF
+check_success "sysctl.conf replaced"
+
+
+
+
+
+
+
 # Set Time Zone to São Paulo
 sudo timedatectl set-timezone America/Sao_Paulo
 check_success "Timezone set"
