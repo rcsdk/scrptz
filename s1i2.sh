@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 echo "Initializing minimal Arch Linux setup..."
@@ -214,8 +213,18 @@ check_success "Pacman updated"
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
 
-sudo pacman -S --noconfirm --needed ufw apparmor openvpn chromium xorg-xinit xorg
-check_success "Basic Packages installed"
+# Install basic tools
+sudo pacman -S --noconfirm --needed ufw apparmor openvpn chromium
+check_success "Basic Packages installed" 
+
+# Install basic tools
+sudo pacman -S --noconfirm --needed xorg-xinit xorg mesa
+check_success "Basic Packages installed" 
+
+# Install basic tools
+sudo pacman -S --noconfirm --needed intel-media-driver snapd
+check_success "Basic Packages installed" 
+
 
 # Install monitoring tools
 # Uncomment if needed
@@ -259,9 +268,7 @@ check_success "Reflector installed"
 sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
 check_success "Mirrors configured"
 
-# Install basic tools
-sudo pacman -S --noconfirm --needed xorg xorg-xinit chromium mesa intel-media-driver ufw
-check_success "Basic Tools Installed"
+
 
 # Disable Touchpad
 synclient TouchpadOff=1
