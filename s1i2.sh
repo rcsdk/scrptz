@@ -3,6 +3,10 @@
 
 echo "Initializing minimal Arch Linux setup..."
 
+# Check the system specs
+inxi -Fxz
+
+
 # Function to check the success of a command
 check_success() {
     if [ $? -ne 0 ]; then
