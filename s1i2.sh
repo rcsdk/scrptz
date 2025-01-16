@@ -236,8 +236,8 @@ check_success "Basic Packages installed"
 sudo rm -f /var/lib/pacman/db.lck
 
 # Download Snapd
-sudo pacman -Syu
-sudo pacman -S snapd
+sudo pacman -Syu --noconfirm --needed
+sudo pacman -S --noconfirm --needed snapd
 
 # Enable and start Snapd
 sudo systemctl enable --now snapd.socket
