@@ -1,5 +1,12 @@
 #!/bin/bash
 
+check_success() {
+    if [ $? -ne 0 ]; then
+        echo "Error: $1 failed. Exiting."
+        exit 1
+    fi
+}
+
 # Replace /etc/pacman.conf with the new configuration
 sudo tee /etc/pacman.conf > /dev/null <<EOF
 [options]
@@ -8,7 +15,6 @@ sudo tee /etc/pacman.conf > /dev/null <<EOF
 # Pacman settings
 ParallelDownloads = 5
 Color
-TotalDownload
 CheckSpace
 VerbosePkgLists
 
@@ -48,6 +54,7 @@ Server = https://mirror.nl.leaseweb.net/archlinux/\$repo/os/\$arch
 Server = https://archlinux.thaller.ws/\$repo/os/\$arch
 Server = https://mirrors.kernel.org/archlinux/\$repo/os/\$arch
 EOF
+check_success "pacman.conf replaced"
 
 # Update /etc/security/limits.conf
 sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
@@ -56,6 +63,7 @@ sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
 *               hard    nproc           128
 *               soft    nproc           64
 EOF
+check_success "limits.conf updated"
 
 # Replace /etc/sysctl.conf with the new configuration
 sudo tee /etc/sysctl.conf > /dev/null <<EOF
