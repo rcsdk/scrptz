@@ -33,6 +33,7 @@ else
     check_success "Adding rc1 to sudoers"
 fi
 
+
 # Replace /etc/pacman.conf with the new configuration
 sudo tee /etc/pacman.conf > /dev/null <<EOF
 [options]
