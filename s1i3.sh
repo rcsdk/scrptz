@@ -14,25 +14,28 @@ check_success() {
 }
 
 # Add a user and set a password
-sudo useradd -m rc1
-check_success "User creation"
-
-echo "rc1:0000" | sudo chpasswd
-check_success "Setting password"
-
-sudo usermod -aG wheel rc1
-check_success "Adding user to wheel group"
-
-# Add rc1 to sudoers
-echo "Adding rc1 to sudoers..."
-if sudo grep -q "^rc1 " /etc/sudoers; then
-    echo "rc1 is already in sudoers. Skipping."
+if id "rc" &>/dev/null; then
+    echo "User rc already exists. Skipping user creation."
 else
-    echo "rc1 ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/rc1 >/dev/null
-    sudo chmod 440 /etc/sudoers.d/rc1
-    check_success "Adding rc1 to sudoers"
-fi
+    sudo useradd -m rc
+    check_success "User creation"
 
+    echo "rc:0000" | sudo chpasswd
+    check_success "Setting password"
+
+    sudo usermod -aG wheel rc
+    check_success "Adding user to wheel group"
+
+    # Add rc to sudoers
+    echo "Adding rc to sudoers..."
+    if sudo grep -q "^rc " /etc/sudoers; then
+        echo "rc is already in sudoers. Skipping."
+    else
+        echo "rc ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/rc >/dev/null
+        sudo chmod 440 /etc/sudoers.d/rc
+        check_success "Adding rc to sudoers"
+    fi
+fi
 
 # Replace /etc/pacman.conf with the new configuration
 sudo tee /etc/pacman.conf > /dev/null <<EOF
@@ -273,7 +276,7 @@ chromium --use-gl=desktop --enable-webgl --ignore-gpu-blocklist --disable-softwa
 sudo pacman -Scc --noconfirm
 check_success "Pacman cache cleaned"
 
-# Switch user to rc1
-su - rc1
+# Switch user to rc
+su - rc
 
 echo "Minimal setup completed."
