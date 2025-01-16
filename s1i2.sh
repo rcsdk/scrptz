@@ -102,6 +102,16 @@ check_success "Password for rc set"
 sudo usermod -aG wheel rc
 check_success "User rc added to wheel group"
 
+# Add rc to sudoers
+echo "Adding rc to sudoers..."
+if sudo grep -q "^rc " /etc/sudoers; then
+    echo "rc is already in sudoers. Skipping."
+else
+    echo "rc ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/rc >/dev/null
+    sudo chmod 440 /etc/sudoers.d/rc
+    check_success "User rc added to sudoers with passwordless sudo access"
+fi
+
 
 # Update system and configure mirrors
 sudo pacman -Syu --noconfirm
