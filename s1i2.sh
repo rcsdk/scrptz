@@ -331,7 +331,8 @@ curl -L https://raw.githubusercontent.com/Figma-Linux/figma-linux-font-helper/ma
 systemctl --user restart figma-fonthelper.service
 systemctl --user status figma-fonthelper.service
 
-chromium --incognito --no-sandbox --disable-background-networking --disable-default-apps --disable-sync --disable-translate --no-first-run --force-device-scale-factor=1
+chromium --use-gl=desktop --enable-webgl --ignore-gpu-blocklist --disable-software-rasterizer
+
 
 # Clean Pacman Cache
 sudo pacman -Scc --noconfirm
