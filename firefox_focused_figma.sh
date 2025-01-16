@@ -1,8 +1,8 @@
 
-pacman -Syu linux-lts intel-ucode linux-firmware
+pacman -Syu l-S --noconfirm --neededinux-lts intel-ucode linux-firmware
 dmesg | grep microcode
 inxi -Fxz | grep "Kernel"
-pacman -S inxi mesa-demos vulkan-tools intel-gpu-tools
+pacman -S --noconfirm --needed inxi mesa-demos vulkan-tools intel-gpu-tools
 
 sudo nano /etc/X11/xorg.conf.d/20-intel.conf
 Content:
@@ -39,7 +39,7 @@ Firefox Config
    - `layers.acceleration.force-enabled` → `true`
    - `webgl.force-enabled` → `true`
 
-pacman -S libva-mesa-driver libva-utils
+pacman -S -S --noconfirm --needed libva-mesa-driver libva-utils
    ```
    Enable in `about:config`:
    - `media.ffmpeg.vaapi.enabled` → `true`
@@ -48,7 +48,7 @@ pacman -S libva-mesa-driver libva-utils
    - `gfx.vulkan.enabled` → `true`
 
 
-pacman -S vulkan-intel vulkan-mesa-layers vulkan-tools
+pacman -S --noconfirm --needed vulkan-intel vulkan-mesa-layers vulkan-tools
 vulkaninfo | grep "GPU"
 
 sudo nano /etc/default/grub
