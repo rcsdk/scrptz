@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Initializing minimal Arch Linux setup..."
+
+# Function to check the success of a command
 check_success() {
     if [ $? -ne 0 ]; then
         echo "Error: $1 failed. Exiting."
@@ -7,19 +10,72 @@ check_success() {
     fi
 }
 
+# Add a user and set a password
+if id "rc" &>/dev/null; then
+    echo "User rc already exists. Skipping user creation."
+else
+    sudo useradd -m rc
+    check_success "User creation"
+
+    echo "rc:0000" | sudo chpasswd
+    check_success "Setting password"
+
+    sudo usermod -aG wheel rc
+    check_success "Adding user to wheel group"
+fi
+
+# Add rc to sudoers
+echo "Adding rc to sudoers..."
+if sudo grep -q "^rc " /etc/sudoers; then
+    echo "rc is already in sudoers. Skipping."
+else
+    echo "rc ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/rc >/dev/null
+    sudo chmod 440 /etc/sudoers.d/rc
+    check_success "Adding rc to sudoers"
+fi
+
+
+
+
+# Pacman basics
+sudo pacman-key --init
+check_success "Pacman keyring initialized"
+
+sudo pacman -Syu
+check_success "Pacman updated"
+
+sudo rm -f /var/lib/pacman/db.lck
+check_success "Pacman lock removed"
+
+# Install basic tools
+sudo pacman -S --noconfirm --needed reflector
+check_success "Basic Packages installed"
+
+# Ensure the /etc/pacman.d directory exists
+sudo mkdir -p /etc/pacman.d
+check_success "pacman.d directory created"
+
+# Install reflector
+sudo pacman -S --noconfirm reflector
+check_success "Reflector installed"
+
+# Generate the mirrorlist using reflector
+sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+check_success "Mirrorlist created"
+
+
 # Replace /etc/pacman.conf with the new configuration
 sudo tee /etc/pacman.conf > /dev/null <<EOF
 [options]
-# NoConfirm
-
 # Pacman settings
+Architecture = auto
 ParallelDownloads = 5
 Color
 CheckSpace
 VerbosePkgLists
 
-# Use sigLevel 'Optional TrustAll' for keyring and avoid keyring problems
-SigLevel = Optional TrustAll
+# Use sigLevel 'Required DatabaseOptional' for keyring and avoid keyring problems
+SigLevel = Required DatabaseOptional
 LocalFileSigLevel = Optional
 
 # General repositories for Arch
@@ -30,7 +86,7 @@ Include = /etc/pacman.d/mirrorlist
 Include = /etc/pacman.d/mirrorlist
 
 [community]
-Include = /etc/pacman.d/mirrorlist
+Include = /etc.pacman.d/mirrorlist
 
 # Custom Repositories
 [myrepo]
@@ -64,6 +120,47 @@ sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
 *               soft    nproc           64
 EOF
 check_success "limits.conf updated"
+
+# Replace /etc/sysctl.conf with the new configuration
+sudo tee /etc/sysctl.conf > /dev/null <<EOF
+kernel.unprivileged_bpf_disabled=1
+kernel.yama.ptrace_scope=2
+vm.swappiness = 10
+vm.vfs_cache_pressure = 50
+
+# Harden kernel parameters
+kernel.dmesg_restrict = 1
+kernel.kptr_restrict = 2
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.all.secure_redirects = 0
+net.ipv4.icmp_echo_ignore_all = 1
+net.ipv6.icmp.echo_ignore_all = 1
+fs.suid_dumpable = 0
+net.ipv4.tcp_timestamps = 0
+net.ipv4.tcp_rfc1337 = 1
+net.ipv4.tcp_max_syn_backlog = 2048
+net.ipv4.tcp_synack_retries = 2
+net.ipv4.tcp_syn_retries = 3
+net.ipv4.conf.all.rp_filter = 1
+kernel.modules_disabled = 1
+fs.protected_hardlinks = 1
+fs.protected_symlinks = 1
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOF
+check_success "sysctl.conf replaced"
+
+# Update /etc/security/limits.conf
+sudo tee -a /etc/security/limits.conf > /dev/null <<EOF
+*               soft    nofile          4096
+*               hard    nofile          8192
+*               hard    nproc           128
+*               soft    nproc           64
+EOF
 
 # Replace /etc/sysctl.conf with the new configuration
 sudo tee /etc/sysctl.conf > /dev/null <<EOF
@@ -247,7 +344,7 @@ chromium --use-gl=desktop --enable-webgl --ignore-gpu-blocklist --disable-softwa
 sudo pacman -Scc --noconfirm
 check_success "Pacman cache cleaned"
 
-# Switch user to rc1
-su - rc1
+# Switch user to rc
+su - rc
 
 echo "Minimal setup completed."
