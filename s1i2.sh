@@ -74,6 +74,10 @@ NoProgressBar = No
 SigLevel = Optional TrustAll
 LocalFileSigLevel = Optional
 
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
+
 # General repositories for Arch
 [core]
 Include = /etc/pacman.d/mirrorlist
@@ -213,17 +217,35 @@ check_success "Pacman updated"
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
 
+
 # Install basic tools
 sudo pacman -S --noconfirm --needed ufw apparmor openvpn chromium
 check_success "Basic Packages installed" 
+sudo rm -f /var/lib/pacman/db.lck
+
 
 # Install basic tools
 sudo pacman -S --noconfirm --needed xorg-xinit xorg mesa
 check_success "Basic Packages installed" 
+sudo rm -f /var/lib/pacman/db.lck
+
 
 # Install basic tools
 sudo pacman -S --noconfirm --needed intel-media-driver snapd
 check_success "Basic Packages installed" 
+sudo rm -f /var/lib/pacman/db.lck
+
+# Download Snapd
+sudo pacman -Syu
+sudo pacman -S snapd
+
+# Enable and start Snapd
+sudo systemctl enable --now snapd.socket
+check_success "Snapd enabled"
+
+# Install Figma via Snap
+sudo snap install figma-linux
+check_success "Figma installed via Snap"
 
 
 # Install monitoring tools
