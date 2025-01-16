@@ -48,8 +48,6 @@ else
     fi
 fi
 
-# Switch user to rc
-su - rc
 
 
 
@@ -366,6 +364,10 @@ chromium --use-gl=desktop --enable-webgl --ignore-gpu-blocklist --disable-softwa
 # Clean Pacman Cache
 sudo pacman -Scc --noconfirm
 check_success "Pacman cache cleaned"
+
+# Switch user to rc
+su - rc
+
 
 echo "Minimal setup completed."
 
