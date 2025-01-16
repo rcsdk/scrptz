@@ -223,16 +223,7 @@ systemctl --user status figma-fonthelper.service
 
 
 
-chromium --incognito
---disable-background-networking
---disable-default-apps
---disable-sync
---disable-translate
---no-first-run
---no-sandbox
---force-device-scale-factor=1
-"https://github.com/login"
-
+chromium --incognito  --no-sandbox --disable-background-networking  --disable-default-apps  --disable-sync  --disable-translate --no-first-run --force-device-scale-factor=1
 
 
 # Clean Pacman Cache
