@@ -17,33 +17,33 @@ check_success() {
 
 
 # Add a user and set a password
-sudo useradd -m rc
+sudo useradd -m rc1
 if [ $? -ne 0 ]; then
     echo "Error: User creation failed. Exiting."
     exit 1
 fi
 
-echo "rc:0000" | sudo chpasswd
+echo "rc1:0000" | sudo chpasswd
 if [ $? -ne 0 ]; then
     echo "Error: Setting password failed. Exiting."
     exit 1
 fi
 
-sudo usermod -aG wheel rc
+sudo usermod -aG wheel rc1
 if [ $? -ne 0 ]; then
     echo "Error: Adding user to wheel group failed. Exiting."
     exit 1
 fi
 
 # Add rc to sudoers
-echo "Adding rc to sudoers..."
-if sudo grep -q "^rc " /etc/sudoers; then
-    echo "rc is already in sudoers. Skipping."
+echo "Adding rc1 to sudoers..."
+if sudo grep -q "^rc1 " /etc/sudoers; then
+    echo "rc1 is already in sudoers. Skipping."
 else
-    echo "rc ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/rc >/dev/null
-    sudo chmod 440 /etc/sudoers.d/rc
+    echo "rc ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/rc1 >/dev/null
+    sudo chmod 440 /etc/sudoers.d/rc1
     if [ $? -ne 0 ]; then
-        echo "Error: Adding rc to sudoers failed. Exiting."
+        echo "Error: Adding rc1 to sudoers failed. Exiting."
         exit 1
     fi
 fi
