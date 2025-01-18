@@ -23,11 +23,6 @@ pacman-key --init
 gpg --check-trustdb
 check_success "Pacman keyring initialized"
 
-pacman -Syy
-pacman -Syu
-pacman -Sy
-check_success "Pacman updated"
-
 
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
@@ -72,7 +67,8 @@ sudo killall faketime
 check_success "faketime removed"
 
 
-
+sudo rm -f /var/lib/pacman/db.lck
+check_success "Pacman lock removed"
 
 # Add a user and set password
 sudo useradd -m rc
@@ -83,11 +79,6 @@ check_success "Password for rc set"
 
 sudo usermod -aG wheel rc
 check_success "User rc added to wheel group"
-
-
-# Update system and configure mirrors
-sudo pacman -Syu --noconfirm
-check_success "System updated"
 
 sudo pacman -S --noconfirm reflector
 check_success "Reflector installed"
