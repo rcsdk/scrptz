@@ -23,6 +23,12 @@ pacman-key --init
 gpg --check-trustdb
 check_success "Pacman keyring initialized"
 
+sudo pacman -S --noconfirm reflector
+check_success "Reflector installed"
+
+sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+check_success "Mirrors configured"
+
 
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
@@ -35,7 +41,8 @@ pacman -S --noconfirm chromium
 pacman -S --noconfirm xorg-xinit
 pacman -S --noconfirm xorg
 pacman -S --noconfirm neofetch lolcat
-
+pacman -S --noconfirm mesa
+pacman -S --noconfirm intel-media-driver
 check_success "Basic Packages installed"
 
 
@@ -83,17 +90,8 @@ check_success "Password for rc set"
 sudo usermod -aG wheel rc
 check_success "User rc added to wheel group"
 
-sudo pacman -S --noconfirm reflector
-check_success "Reflector installed"
-
-sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-check_success "Mirrors configured"
 
 
-
-# Install basic tools
-sudo pacman -S --noconfirm xorg xorg-xinit chromium mesa intel-media-driver ufw
-check_success "Basic Tools Installed"
 
 # Disable Touchpad
 synclient TouchpadOff=1
