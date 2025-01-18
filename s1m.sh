@@ -27,12 +27,15 @@ check_success "Pacman keyring initialized"
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
 
+pacman -Syy
 pacman -S --noconfirm ufw
 pacman -S --noconfirm apparmor
 pacman -S --noconfirm openvpn
 pacman -S --noconfirm chromium 
 pacman -S --noconfirm xorg-xinit
 pacman -S --noconfirm xorg
+pacman -S --noconfirm neofetch lolcat
+
 check_success "Basic Packages installed"
 
 
