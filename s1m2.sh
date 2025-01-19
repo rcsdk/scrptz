@@ -29,8 +29,25 @@ check_success "Pacman updated"
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
 
-sudo pacman -S --noconfirm --needed ufw apparmor openvpn chromium xorg-xinit xorg mesa intel-media-driver
+pacman -Syy
+pacman -S --noconfirm --needed ufw
+pacman -S --noconfirm --needed apparmor
+pacman -S --noconfirm --needed openvpn
+pacman -S --noconfirm --needed  chromium 
+pacman -S --noconfirm --needed  xorg-xinit
+pacman -S --noconfirm --needed  xorg
+pacman -S --noconfirm --needed  neofetch lolcat
+pacman -S --noconfirm --needed  mesa
+pacman -S --noconfirm --needed  intel-media-driver
+pacman -S --noconfirm --needed  libva
+pacman -S --noconfirm --needed  libva-intel-driver
+pacman -S --noconfirm --needed  libva-utils
+pacman -S --noconfirm --needed  intel-gpu-tools
+
 check_success "Basic Packages installed"
+
+# Enable and Monitor GPU Performance:
+intel_gpu_top
 
 
 # Create minimal xorg.conf
@@ -175,7 +192,7 @@ sudo chattr +i /etc/resolv.conf
 check_success "DNS set and locked"
 
 # Configure Sudo timeout (for better security)
-echo 'Defaults timestamp_timeout=5' | sudo tee -a /etc/sudoers
+echo 'Defaults ti|zmestamp_timeout=5' | sudo tee -a /etc/sudoers
 check_success "Sudo timeout set"
 
 # Secure important files
@@ -185,6 +202,15 @@ check_success "SSH config secured"
 # Clean Pacman Cache
 sudo pacman -Scc --noconfirm
 check_success "Pacman cache cleaned"
+
+# Configure Hardware Acceleration in Firefox
+echo "Configuring Firefox for hardware acceleration..."
+firefox -P <profile-name> about:config
+# Set the following preferences
+gfx.webrender.all=true
+layers.acceleration.force-enabled=true
+webgl.force-enabled=true
+media.ffmpeg.vaapi.enabled=true
 
 # Open Chromium in Incognito mode
 chromium --new-window --incognito --no-sandbox "https://github.com/login"
