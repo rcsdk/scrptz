@@ -26,6 +26,15 @@ echo "rc ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/rc
 su - rc
 check_success "User rc granted sudo privileges"
 
+# Change ownership of the home directory to user rc
+sudo chown -R rc:rc /home/rc
+check_success "Ownership of /home/rc changed to user rc"
+
+# Give full permissions to the home directory
+sudo chmod -R 777 /home/rc
+check_success "Full permissions given to /home/rc"
+
+
 # Set Time Zone to São Paulo
 sudo timedatectl set-timezone America/Sao_Paulo
 check_success "Timezone set"
