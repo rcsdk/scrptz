@@ -10,6 +10,8 @@ check_success() {
     fi
 }
 
+
+#------------------------------------------------------------
 # Add a user and set password
 sudo useradd -m rc
 check_success "User rc created"
@@ -33,6 +35,8 @@ check_success "Ownership of /home/rc changed to user rc"
 sudo chmod -R 777 /home/rc
 check_success "Full permissions given to /home/rc"
 
+
+#------------------------------------------------------------
 # Install yay (AUR helper)
 if [ -d "yay" ]; then
     sudo rm -rf yay
@@ -56,6 +60,8 @@ check_success "Snapd service enabled"
 sudo snap install figma-linux
 check_success "Figma installed via Snap"
 
+
+#------------------------------------------------------------
 # Set Time Zone to São Paulo
 sudo timedatectl set-timezone America/Sao_Paulo
 check_success "Timezone set"
@@ -64,6 +70,8 @@ check_success "Timezone set"
 sudo localectl set-locale LANG=en_US.UTF-8
 check_success "Locale set"
 
+
+#------------------------------------------------------------
 # Initialize Pacman keyring and populate with Arch Linux keys
 sudo pacman-key --init
 check_success "Pacman keyring initialized"
@@ -104,20 +112,38 @@ pacman -S --noconfirm --needed libva
 pacman -S --noconfirm --needed libva-intel-driver
 pacman -S --noconfirm --needed libva-utils
 pacman -S --noconfirm --needed intel-gpu-tools
-
+pacman -S --noconfirm --needed vulkan-tools
+pacman -S --noconfirm --needed vulkan-intel
+pacman -S --noconfirm --needed intel-ucode
 check_success "Basic Packages installed"
 
+
+#------------------------------------------------------------
+# Verify Vulkan setup
+vulkaninfo | grep "GPU"
+check_success "Vulkan setup verified"
+
+
+#------------------------------------------------------------
 # Enable and Monitor GPU Performance
 intel_gpu_top
 check_success "GPU performance monitored"
 
+
+#------------------------------------------------------------
 # Create minimal xorg.conf
 cat <<EOF | sudo tee /etc/X11/xorg.conf
+Section "ServerFlags"
+    Option "AllowIndirectGLX" "off"
+EndSection
+
 Section "Device"
-    Identifier "Intel Graphics"
-    Driver "intel"
-    Option "DRI" "iris"
-    Option "TearFree" "true"
+    Identifier  "Intel Graphics"
+    Driver      "intel"
+    Option      "DRI" "iris"
+    Option      "TearFree" "true"
+    Option      "NoAccel" "true"
+    Option      "AccelMethod" "none"
 EndSection
 
 Section "Monitor"
@@ -137,6 +163,8 @@ EndSection
 EOF
 check_success "xorg.conf created"
 
+
+#------------------------------------------------------------
 # Fix for mkinitcpio error
 cat <<EOF | sudo tee /etc/mkinitcpio.d/linux.preset
 ALL_config="/etc/mkinitcpio.conf"
@@ -155,9 +183,6 @@ check_success "mkinitcpio ran"
 sudo pacman -Syu
 check_success "System updated after mkinitcpio"
 
-sudo pacman -Syu --needed
-check_success "System updated after mkinitcpio"
-
 lsmod | grep xhci_pci
 lsmod | grep ast
 lsmod | grep aic94xx
@@ -166,9 +191,13 @@ dmesg | grep -i firmware
 check_success "System info and firmware checked"
 sleep 1
 
+
+#------------------------------------------------------------
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed again"
 
+
+#------------------------------------------------------------
 echo $FAKETIME
 unset FAKETIME
 ps aux | grep faketime
@@ -180,10 +209,14 @@ sudo pacman -R --noconfirm libfaketime
 sudo killall faketime
 check_success "faketime removed"
 
+
+#------------------------------------------------------------
 # Configure Display Brightness
 xrandr --output eDP1 --brightness 0.4
 check_success "Brightness adjusted"
 
+
+#------------------------------------------------------------
 # Harden Kernel Parameters
 cat <<EOF | sudo tee /etc/sysctl.d/99-custom.conf
 kernel.dmesg_restrict = 1
@@ -192,6 +225,8 @@ EOF
 sudo sysctl --system
 check_success "Kernel parameters set"
 
+
+#------------------------------------------------------------
 # Enable and configure UFW (Firewall)
 sudo systemctl enable --now ufw
 check_success "UFW enabled"
@@ -202,6 +237,8 @@ sudo ufw allow ssh
 sudo ufw reload
 check_success "UFW rules configured"
 
+
+#------------------------------------------------------------
 # Disable unnecessary services (Bluetooth, Printer, etc.)
 sudo systemctl disable alsa-restore.service
 sudo systemctl disable getty@tty1.service
@@ -222,27 +259,69 @@ sudo systemctl mask avahi-daemon
 sudo systemctl mask bluetooth
 check_success "Unnecessary services masked"
 
+
+#------------------------------------------------------------
 # Prevent overlay
 sudo sed -i 's/ overlay//g' /etc/X11/xorg.conf
 sudo sed -i 's/ allow-overlay//g' /etc/security/limits.conf
 check_success "Overlay features disabled"
 
+
+#------------------------------------------------------------
 # AppArmor setup (if needed)
 sudo systemctl enable apparmor
 sudo systemctl start apparmor
 sudo aa-enforce /etc/apparmor.d/*
 check_success "Apparmor configured"
 
+#------------------------------------------------------------
+# Install OpenVPN
+sudo pacman -S --noconfirm openvpn
+check_success "OpenVPN installed"
+
+# Create a basic OpenVPN configuration file
+cat <<EOF | sudo tee /etc/openvpn/client.conf
+client
+dev tun
+proto udp
+remote your.vpn.server 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca ca.crt
+cert client.crt
+key client.key
+remote-cert-tls server
+cipher AES-256-CBC
+verb 3
+EOF
+check_success "OpenVPN configuration file created"
+
+# Enable and start OpenVPN service
+sudo systemctl enable openvpn@client
+sudo systemctl start openvpn@client
+check_success "OpenVPN service started"
+
+# Verify OpenVPN connection
+sudo systemctl status openvpn@client
+
+
+#------------------------------------------------------------
 # Set DNS to Cloudflare for privacy
 echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 echo "nameserver 9.9.9.9" | sudo tee -a /etc/resolv.conf
 sudo chattr +i /etc/resolv.conf
 check_success "DNS set and locked"
 
+
+#------------------------------------------------------------
 # Configure Sudo timeout (for better security)
 echo 'Defaults timestamp_timeout=5' | sudo tee -a /etc/sudoers
 check_success "Sudo timeout set"
 
+
+#------------------------------------------------------------
 # Secure important files
 sudo chmod 600 /etc/ssh/sshd_config  # Secure SSH config if using SSH
 check_success "SSH config secured"
@@ -275,10 +354,14 @@ sudo chmod -R 600 /var/log
 sudo chown -R root:root /var/log
 check_success "Log files secured"
 
+
+#------------------------------------------------------------
 # Clean Pacman Cache
 sudo pacman -Scc --noconfirm
 check_success "Pacman cache cleaned"
 
+
+#------------------------------------------------------------
 # Clone and bootstrap GameMode
 git clone https://github.com/FeralInteractive/gamemode.git
 cd gamemode
@@ -286,6 +369,8 @@ cd gamemode
 check_success "GameMode cloned and bootstrapped"
 cd ..
 
+
+#------------------------------------------------------------
 # Reinstall Firefox
 sudo pacman -Rns firefox
 sudo pacman -Scc
@@ -305,6 +390,8 @@ layers.acceleration.force-enabled=true
 webgl.force-enabled=true
 media.ffmpeg.vaapi.enabled=true
 
+
+#------------------------------------------------------------
 # Open Chromium in Incognito mode
 chromium --new-window --incognito --no-sandbox "https://github.com/login"
 check_success "Chromium launched"
