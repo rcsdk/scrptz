@@ -130,6 +130,7 @@ check_success "User rc added to wheel group"
 
 # Grant sudo privileges to the user rc
 echo "rc ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/rc
+su - rc
 check_success "User rc granted sudo privileges"
 
 # Configure Display Brightness
