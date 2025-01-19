@@ -47,10 +47,10 @@ then
 else
     echo "Error: Failed to update pacman.conf"
     exit 1
-fi
 
-#------------------------------------------------------------# Add a user and set password
-# Create rc user
+
+#------------------------------------------------------------
+fi# Create rc user
 
 if sudo useradd -m rc; then
     echo "User rc created successfully"
