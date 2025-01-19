@@ -14,7 +14,44 @@ check_success() {
 }
 
 #------------------------------------------------------------
-# Add a user and set password
+# Add new pacman.conf configuration
+if cat <<EOF | sudo tee /etc/pacman.conf
+[options]
+RootDir = /
+DBPath = /var/lib/pacman/
+CacheDir = /var/cache/pacman/pkg/
+LogFile = /var/log/pacman.log
+GPGDir = /etc/pacman.d/gnupg/
+HoldPkg = pacman glibc
+XferCommand = /usr/bin/curl -C - -f %u > %o
+Architecture = auto
+
+[core]
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+Include = /etc/pacman.d/mirrorlist
+
+[community]
+Include = /etc/pacman.d/mirrorlist
+
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/\$arch
+EOF
+then
+    check_success "pacman.conf updated"
+else
+    echo "Error: Failed to update pacman.conf"
+    exit 1
+fi
+
+#------------------------------------------------------------# Add a user and set password
+# Create rc user
+
 if sudo useradd -m rc; then
     echo "User rc created successfully"
 else
