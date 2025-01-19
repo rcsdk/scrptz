@@ -284,16 +284,19 @@ cd gamemode
 check_success "GameMode cloned and bootstrapped"
 cd ..
 
-#Reinstall Firefox
+# Reinstall Firefox
 sudo pacman -Rns firefox
 sudo pacman -Scc
 sudo pacman -S --noconfirm firefox
 rm -rf ~/.mozilla/firefox
 
+# Create a new Firefox profile named "rc"
+echo "Creating a new Firefox profile..."
+firefox --no-remote -CreateProfile "rc ~/.mozilla/firefox/rc"
 
 # Configure Hardware Acceleration in Firefox
 echo "Configuring Firefox for hardware acceleration..."
-firefox -P <profile-name> about:config
+firefox -P rc about:config
 # Set the following preferences
 gfx.webrender.all=true
 layers.acceleration.force-enabled=true
