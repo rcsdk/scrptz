@@ -23,7 +23,7 @@ CacheDir = /var/cache/pacman/pkg/
 LogFile = /var/log/pacman.log
 GPGDir = /etc/pacman.d/gnupg/
 HoldPkg = pacman glibc
-XferCommand = /usr/bin/curl -C - -f %u > %o
+XferCommand = /usr/bin/curl -C --output pac.log - -f %u > %o 
 Architecture = auto
 
 [core]
