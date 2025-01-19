@@ -1,4 +1,4 @@
-#!/bin/bash
+  - #!/bin/bash
 
 echo "Initializing minimal Arch Linux setup..."
 
@@ -23,6 +23,13 @@ pacman-key --init
 gpg --check-trustdb
 check_success "Pacman keyring initialized"
 
+sudo pacman-key --populate archlinux
+check_success "Pacman keyring populated"
+
+sudo gpg --check-trustdb
+check_success "GPG trustdb checked"
+
+# Prepare Pacman and do all Downloads
 sudo pacman -Syy --needed
 check_success "Pacman updated"
 
