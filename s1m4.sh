@@ -337,6 +337,15 @@ net.ipv6.conf.all.forwarding = 0
 # Enable execshield protection
 kernel.exec-shield = 1
 
+# Restrict access to debugfs
+kernel.debugfs_restrict = 1
+
+# Enable strict RWX memory permissions
+vm.mmap_min_addr = 4096
+kernel.exec-shield = 1
+vm.mmap_rnd_bits = 24
+vm.mmap_rnd_compat_bits = 16
+
 EOF
 then
     sudo sysctl --system
@@ -347,6 +356,7 @@ else
 fi
 
 #------------------------------------------------------------
+
 # Enable and configure UFW (Firewall)
 if sudo systemctl enable --now ufw; then
     check_success "UFW enabled"
