@@ -32,8 +32,49 @@ check_success "Pacman lock removed"
 sudo pacman -S --noconfirm --needed ufw apparmor openvpn chromium xorg-xinit xorg mesa intel-media-driver
 check_success "Basic Packages installed"
 
+
+# Create minimal xorg.conf
+cat <<EOF | sudo tee /etc/X11/xorg.conf
+Section "Device"
+    Identifier "Intel Graphics"
+    Driver "intel"
+EndSection
+
+Section "Monitor"
+    Identifier "eDP1"
+EndSection
+
+Section "Screen"
+    Identifier "Screen0"
+    Device "Intel Graphics"
+    Monitor "eDP1"
+EndSection
+
+Section "ServerLayout"
+    Identifier "Layout0"
+    Screen "Screen0"
+EndSection
+EOF
+check_success "xorg.conf created"
+
+# Fix for mkinitcpio error
+cat <<EOF | sudo tee /etc/mkinitcpio.d/linux.preset
+ALL_config="/etc/mkinitcpio.conf"
+ALL_kver="/boot/vmlinuz-linux"
+
+PRESETS=('default')
+
+default_image="/boot/initramfs-linux.img"
+default_options=""
+EOF
+check_success "/etc/mkinitcpio.d/linux.preset created"
+
 sudo mkinitcpio -p linux
 check_success "mkinitcpio ran"
+
+sudo pacman -Syu
+check_success "System updated after mkinitcpio"
+
 
 sudo pacman -Syu --needed
 check_success "System updated after mkinitcpio"
