@@ -1,4 +1,4 @@
-  - #!/bin/bash
+#!/bin/bash
 
 echo "Initializing minimal Arch Linux setup..."
 
@@ -18,16 +18,24 @@ check_success "Timezone set"
 sudo localectl set-locale LANG=en_US.UTF-8
 check_success "Locale set"
 
-# Pacman basics
-pacman-key --init
-gpg --check-trustdb
+# Initialize Pacman keyring and populate with Arch Linux keys
+sudo pacman-key --init
 check_success "Pacman keyring initialized"
 
 sudo pacman-key --populate archlinux
 check_success "Pacman keyring populated"
 
+# Check GPG trust database
 sudo gpg --check-trustdb
 check_success "GPG trustdb checked"
+
+# Prepare Pacman and do all Downloads
+sudo pacman -Syy --needed
+check_success "Pacman updated"
+
+# Remove any existing Pacman lock file
+sudo rm -f /var/lib/pacman/db.lck
+check_success "Pacman lock removed"
 
 # Prepare Pacman and do all Downloads
 sudo pacman -Syy --needed
@@ -53,8 +61,9 @@ pacman -S --noconfirm --needed  intel-gpu-tools
 
 check_success "Basic Packages installed"
 
-# Enable and Monitor GPU Performance:
+# Enable and Monitor GPU Performance
 intel_gpu_top
+check_success "GPU performance monitored"
 
 
 # Create minimal xorg.conf
