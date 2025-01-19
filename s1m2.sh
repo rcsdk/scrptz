@@ -114,7 +114,7 @@ grep faketime ~/.bashrc ~/.zshrc ~/.profile
 grep faketime /etc/profile.d/*
 kill -9 9394 9400
 grep faketime ~/.bashrc ~/.zshrc /etc/profile /etc/profile.d/*
-sudo pacman -R libfaketime
+sudo pacman -R --noconfirm libfaketime
 sudo killall faketime
 check_success "faketime removed"
 
