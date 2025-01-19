@@ -608,4 +608,22 @@ chromium_flags=(
     "--disable-remote-fonts"
     "--disable-blink-features=AutomationControlled"
     "--incognito"
-    "--use-gl
+    --use-gl=egl
+    --enable-features=VaapiVideoDecoder
+    --enable-accelerated-video-decode
+    --enable-accelerated-mjpeg-decode
+    --disable-gpu-sandbox
+    --enable-native-gpu-memory-buffers
+    --use-vulkan
+    --enable-zero-copy
+)
+
+# Launch Chromium with optimized flags
+if chromium "${chromium_flags[@]}" &; then
+    check_success "Chromium configured and launched"
+else
+    echo "Error: Failed to configure and launch Chromium"
+    exit 1
+fi
+
+echo "Minimal setup completed."
