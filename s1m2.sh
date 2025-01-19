@@ -94,16 +94,16 @@ pacman -Syy
 pacman -S --noconfirm --needed ufw
 pacman -S --noconfirm --needed apparmor
 pacman -S --noconfirm --needed openvpn
-pacman -S --noconfirm --needed  chromium 
-pacman -S --noconfirm --needed  xorg-xinit
-pacman -S --noconfirm --needed  xorg
-pacman -S --noconfirm --needed  neofetch lolcat
-pacman -S --noconfirm --needed  mesa
-pacman -S --noconfirm --needed  intel-media-driver
-pacman -S --noconfirm --needed  libva
-pacman -S --noconfirm --needed  libva-intel-driver
-pacman -S --noconfirm --needed  libva-utils
-pacman -S --noconfirm --needed  intel-gpu-tools
+pacman -S --noconfirm --needed chromium 
+pacman -S --noconfirm --needed xorg-xinit
+pacman -S --noconfirm --needed xorg
+pacman -S --noconfirm --needed neofetch lolcat
+pacman -S --noconfirm --needed mesa
+pacman -S --noconfirm --needed intel-media-driver
+pacman -S --noconfirm --needed libva
+pacman -S --noconfirm --needed libva-intel-driver
+pacman -S --noconfirm --needed libva-utils
+pacman -S --noconfirm --needed intel-gpu-tools
 
 check_success "Basic Packages installed"
 
@@ -116,6 +116,8 @@ cat <<EOF | sudo tee /etc/X11/xorg.conf
 Section "Device"
     Identifier "Intel Graphics"
     Driver "intel"
+    Option "DRI" "iris"
+    Option "TearFree" "true"
 EndSection
 
 Section "Monitor"
