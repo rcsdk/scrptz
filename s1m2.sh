@@ -24,8 +24,6 @@ gpg --check-trustdb
 check_success "Pacman keyring initialized"
 
 sudo pacman -Syy --needed
-sudo pacman -Syu --needed
-sudo pacman -Sy --needed
 check_success "Pacman updated"
 
 sudo rm -f /var/lib/pacman/db.lck
@@ -146,26 +144,6 @@ check_success "SSH config secured"
 # Clean Pacman Cache
 sudo pacman -Scc --noconfirm
 check_success "Pacman cache cleaned"
-
-# Enable automatic updates (via `pacman` or `systemd`)
-echo "[Timer]" | sudo tee /etc/systemd/system/pacman-updates.timer
-echo "OnBootSec=10min" | sudo tee -a /etc/systemd/system/pacman-updates.timer
-echo "OnUnitActiveSec=1d" | sudo tee -a /etc/systemd/system/pacman-updates.timer
-echo "[Service]" | sudo tee -a /etc/systemd/system/pacman-updates.service
-echo "ExecStart=/usr/bin/pacman -Syu --noconfirm" | sudo tee -a /etc/systemd/system/pacman-updates.service
-sudo systemctl enable pacman-updates.timer
-check_success "Automatic updates enabled"
-
-# Figma hooking with local fonts
-curl -L https://raw.githubusercontent.com/Figma-Linux/figma-linux-font-helper/master/res/install.sh | bash
-check_success "Figma Font Helper installed"
-
-# nano ~/.config/figma-linux/settings.json
-
-systemctl --user restart figma-fonthelper.service
-check_success "Figma font helper restarted"
-
-# systemctl --user status figma-fonthelper.service
 
 # Open Chromium in Incognito mode
 chromium --new-window --incognito --no-sandbox "https://github.com/login"
