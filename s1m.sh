@@ -18,6 +18,10 @@ check_success "Timezone set"
 sudo localectl set-locale LANG=en_US.UTF-8
 check_success "Locale set"
 
+# Disable Touchpad
+synclient TouchpadOff=1
+check_success "Touchpad disabled"
+
 # Pacman basics
 pacman-key --init
 gpg --check-trustdb
@@ -90,12 +94,9 @@ check_success "Password for rc set"
 sudo usermod -aG wheel rc
 check_success "User rc added to wheel group"
 
-
-
-
-# Disable Touchpad
-synclient TouchpadOff=1
-check_success "Touchpad disabled"
+# Grant sudo privileges to the user rc
+echo "rc ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/rc
+check_success "User rc granted sudo privileges"
 
 
 # Configure Display Brightness
