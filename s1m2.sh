@@ -33,7 +33,6 @@ check_success "Ownership of /home/rc changed to user rc"
 sudo chmod -R 777 /home/rc
 check_success "Full permissions given to /home/rc"
 
-
 # Install yay (AUR helper)
 if [ -d "yay" ]; then
     sudo rm -rf yay
@@ -56,8 +55,6 @@ check_success "Snapd service enabled"
 # Install Figma via Snap
 sudo snap install figma-linux
 check_success "Figma installed via Snap"
-
-
 
 # Set Time Zone to São Paulo
 sudo timedatectl set-timezone America/Sao_Paulo
@@ -114,7 +111,6 @@ check_success "Basic Packages installed"
 intel_gpu_top
 check_success "GPU performance monitored"
 
-
 # Create minimal xorg.conf
 cat <<EOF | sudo tee /etc/X11/xorg.conf
 Section "Device"
@@ -157,7 +153,6 @@ check_success "mkinitcpio ran"
 sudo pacman -Syu
 check_success "System updated after mkinitcpio"
 
-
 sudo pacman -Syu --needed
 check_success "System updated after mkinitcpio"
 
@@ -182,7 +177,6 @@ grep faketime ~/.bashrc ~/.zshrc /etc/profile /etc/profile.d/*
 sudo pacman -R --noconfirm libfaketime
 sudo killall faketime
 check_success "faketime removed"
-
 
 # Configure Display Brightness
 xrandr --output eDP1 --brightness 0.4
@@ -244,7 +238,7 @@ sudo chattr +i /etc/resolv.conf
 check_success "DNS set and locked"
 
 # Configure Sudo timeout (for better security)
-echo 'Defaults ti|zmestamp_timeout=5' | sudo tee -a /etc/sudoers
+echo 'Defaults timestamp_timeout=5' | sudo tee -a /etc/sudoers
 check_success "Sudo timeout set"
 
 # Secure important files
@@ -279,7 +273,6 @@ sudo chmod -R 600 /var/log
 sudo chown -R root:root /var/log
 check_success "Log files secured"
 
-
 # Clean Pacman Cache
 sudo pacman -Scc --noconfirm
 check_success "Pacman cache cleaned"
@@ -290,6 +283,13 @@ cd gamemode
 ./bootstrap.sh
 check_success "GameMode cloned and bootstrapped"
 cd ..
+
+#Reinstall Firefox
+sudo pacman -Rns firefox
+sudo pacman -Scc
+sudo pacman -S --noconfirm firefox
+rm -rf ~/.mozilla/firefox
+
 
 # Configure Hardware Acceleration in Firefox
 echo "Configuring Firefox for hardware acceleration..."
