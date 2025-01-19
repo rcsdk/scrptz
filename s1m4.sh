@@ -309,8 +309,34 @@ fi
 #------------------------------------------------------------
 # Harden Kernel Parameters
 if cat <<EOF | sudo tee /etc/sysctl.d/99-custom.conf
+# Restrict access to kernel logs
 kernel.dmesg_restrict = 1
+
+# Restrict access to kernel pointers
 kernel.kptr_restrict = 2
+
+# Disable unprivileged BPF (Berkeley Packet Filter)
+kernel.unprivileged_bpf_disabled = 1
+
+# Enable kernel address space layout randomization (ASLR)
+kernel.randomize_va_space = 2
+
+# Disable loading of new kernel modules
+kernel.modules_disabled = 1
+
+# Disable core dumps
+fs.suid_dumpable = 0
+
+# Enable protection against SYN flooding
+net.ipv4.tcp_syncookies = 1
+
+# Disable IP forwarding
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+
+# Enable execshield protection
+kernel.exec-shield = 1
+
 EOF
 then
     sudo sysctl --system
