@@ -199,10 +199,39 @@ check_success "Sudo timeout set"
 # Secure important files
 sudo chmod 600 /etc/ssh/sshd_config  # Secure SSH config if using SSH
 check_success "SSH config secured"
+sudo chmod 600 /etc/shadow
+sudo chown root:root /etc/shadow
+check_success "Shadow file secured"
+sudo chmod 600 /etc/gshadow
+sudo chown root:root /etc/gshadow
+check_success "GShadow file secured"
+sudo chmod 644 /etc/passwd
+sudo chown root:root /etc/passwd
+check_success "Passwd file secured"
+sudo chmod 644 /etc/group
+sudo chown root:root /etc/group
+check_success "Group file secured"
+sudo chmod 700 /boot
+sudo chown root:root /boot
+check_success "Boot directory secured"
+sudo chmod 440 /etc/sudoers
+sudo chown root:root /etc/sudoers
+check_success "Sudoers file secured"
+sudo chmod -R 600 /var/log
+sudo chown -R root:root /var/log
+check_success "Log files secured"
+
 
 # Clean Pacman Cache
 sudo pacman -Scc --noconfirm
 check_success "Pacman cache cleaned"
+
+# Clone and bootstrap GameMode
+git clone https://github.com/FeralInteractive/gamemode.git
+cd gamemode
+./bootstrap.sh
+check_success "GameMode cloned and bootstrapped"
+cd ..
 
 # Configure Hardware Acceleration in Firefox
 echo "Configuring Firefox for hardware acceleration..."
