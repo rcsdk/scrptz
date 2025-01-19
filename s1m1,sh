@@ -18,64 +18,26 @@ check_success "Timezone set"
 sudo localectl set-locale LANG=en_US.UTF-8
 check_success "Locale set"
 
-# Disable Touchpad
-synclient TouchpadOff=1
-check_success "Touchpad disabled"
-
 # Pacman basics
 pacman-key --init
 gpg --check-trustdb
 check_success "Pacman keyring initialized"
 
-sudo pacman -S --noconfirm reflector
-check_success "Reflector installed"
-
-sudo reflector --country 'United States' --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-check_success "Mirrors configured"
+sudo pacman -Syy --needed
+sudo pacman -Syu --needed
+sudo pacman -Sy --needed
+check_success "Pacman updated"
 
 sudo rm -f /var/lib/pacman/db.lck
 check_success "Pacman lock removed"
 
-pacman -Syy
-pacman -S --noconfirm ufw
-pacman -S --noconfirm apparmor
-pacman -S --noconfirm openvpn
-pacman -S --noconfirm chromium 
-pacman -S --noconfirm xorg-xinit
-pacman -S --noconfirm xorg
-pacman -S --noconfirm neofetch lolcat
-pacman -S --noconfirm mesa
-pacman -S --noconfirm intel-media-driver
+sudo pacman -S --noconfirm --needed ufw apparmor openvpn chromium xorg-xinit xorg mesa intel-media-driver
 check_success "Basic Packages installed"
-
-# Create minimal xorg.conf
-cat <<EOF | sudo tee /etc/X11/xorg.conf
-Section "Device"
-    Identifier "Intel Graphics"
-    Driver "intel"
-EndSection
-
-Section "Monitor"
-    Identifier "eDP1"
-EndSection
-
-Section "Screen"
-    Identifier "Screen0"
-    Device "Intel Graphics"
-    Monitor "eDP1"
-EndSection
-
-Section "ServerLayout"
-    Identifier "Layout0"
-    Screen "Screen0"
-EndSection
-EOF
-check_success "xorg.conf created"
 
 sudo mkinitcpio -p linux
 check_success "mkinitcpio ran"
 
-sudo pacman -Syu
+sudo pacman -Syu --needed
 check_success "System updated after mkinitcpio"
 
 lsmod | grep xhci_pci
@@ -99,9 +61,6 @@ grep faketime ~/.bashrc ~/.zshrc /etc/profile /etc/profile.d/*
 sudo pacman -R libfaketime
 sudo killall faketime
 check_success "faketime removed"
-
-sudo rm -f /var/lib/pacman/db.lck
-check_success "Pacman lock removed"
 
 # Add a user and set password
 sudo useradd -m rc
