@@ -10,6 +10,22 @@ check_success() {
     fi
 }
 
+
+# Add a user and set password
+sudo useradd -m rc
+check_success "User rc created"
+
+echo "rc:0000" | sudo chpasswd
+check_success "Password for rc set"
+
+sudo usermod -aG wheel rc
+check_success "User rc added to wheel group"
+
+# Grant sudo privileges to the user rc
+echo "rc ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/rc
+su - rc
+check_success "User rc granted sudo privileges"
+
 # Set Time Zone to São Paulo
 sudo timedatectl set-timezone America/Sao_Paulo
 check_success "Timezone set"
@@ -134,20 +150,6 @@ sudo pacman -R --noconfirm libfaketime
 sudo killall faketime
 check_success "faketime removed"
 
-# Add a user and set password
-sudo useradd -m rc
-check_success "User rc created"
-
-echo "rc:0000" | sudo chpasswd
-check_success "Password for rc set"
-
-sudo usermod -aG wheel rc
-check_success "User rc added to wheel group"
-
-# Grant sudo privileges to the user rc
-echo "rc ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/rc
-su - rc
-check_success "User rc granted sudo privileges"
 
 # Configure Display Brightness
 xrandr --output eDP1 --brightness 0.4
