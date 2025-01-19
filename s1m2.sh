@@ -36,6 +36,10 @@ check_success "Full permissions given to /home/rc"
 
 
 # Install yay (AUR helper)
+if [ -d "yay" ]; then
+    sudo rm -rf yay
+    check_success "Existing yay directory removed"
+fi
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
