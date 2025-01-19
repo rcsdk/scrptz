@@ -35,6 +35,27 @@ sudo chmod -R 777 /home/rc
 check_success "Full permissions given to /home/rc"
 
 
+# Install yay (AUR helper)
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+check_success "yay installed"
+cd ..
+
+# Install Snapd using yay
+yay -S --noconfirm snapd
+check_success "Snapd installed"
+
+# Enable and start Snapd
+sudo systemctl enable --now snapd.socket
+check_success "Snapd service enabled"
+
+# Install Figma via Snap
+sudo snap install figma-linux
+check_success "Figma installed via Snap"
+
+
+
 # Set Time Zone to São Paulo
 sudo timedatectl set-timezone America/Sao_Paulo
 check_success "Timezone set"
