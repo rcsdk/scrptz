@@ -10,7 +10,6 @@ check_success() {
     fi
 }
 
-
 # Add a user and set password
 sudo useradd -m rc
 check_success "User rc created"
