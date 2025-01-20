@@ -663,3 +663,4 @@ else
 fi 
 
 echo "Minimal setup completed."
+fi
