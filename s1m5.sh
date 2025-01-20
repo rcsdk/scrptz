@@ -47,11 +47,10 @@ then
 else
     echo "Error: Failed to update pacman.conf"
     exit 1
-
+fi  # <-- Add this missing fi
 
 #------------------------------------------------------------
-fi# Create rc user
-
+# Create rc user
 if sudo useradd -m rc; then
     echo "User rc created successfully"
 else
@@ -615,52 +614,4 @@ if sudo pacman -S --noconfirm chromium; then
 else
     echo "Error: Failed to install Chromium"
     exit 1
-fi
-
-# Configure Chromium settings
-echo "Configuring Chromium settings..."
-chromium_flags=(
-    "--disable-infobars"
-    "--disable-plugins"
-    "--disable-extensions"
-    "--disable-component-extensions-with-background-pages"
-    "--disable-background-networking"
-    "--disable-sync"
-    "--disable-translate"
-    "--disable-default-apps"
-    "--disable-software-rasterizer"
-    "--disable-background-timer-throttling"
-    "--disable-renderer-backgrounding"
-    "--disable-backgrounding-occluded-windows"
-    "--disable-breakpad"
-    "--disable-client-side-phishing-detection"
-    "--disable-domain-reliability"
-    "--disable-hang-monitor"
-    "--disable-popup-blocking"
-    "--disable-prompt-on-repost"
-    "--disable-speech-api"
-    "--disable-webgl"
-    "--disable-web-security"
-    "--disable-site-isolation-trials"
-    "--disable-remote-fonts"
-    "--disable-blink-features=AutomationControlled"
-    "--incognito"
-    --use-gl=egl
-    --enable-features=VaapiVideoDecoder
-    --enable-accelerated-video-decode
-    --enable-accelerated-mjpeg-decode
-    --disable-gpu-sandbox
-    --enable-native-gpu-memory-buffers
-    --use-vulkan
-    --enable-zero-copy
-)
-# Launch Chromium with optimized flags
-if chromium "${chromium_flags[@]}" & then
-    check_success "Chromium configured and launched"
-else
-    echo "Error: Failed to configure and launch Chromium"
-    exit 1
-fi 
-
-echo "Minimal setup completed."
 fi
