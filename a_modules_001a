@@ -1,3 +1,5 @@
+#------------------------------------------------------------
+
 # Add new pacman.conf configuration
 sudo tee /etc/pacman.conf <<EOF
 [options]
@@ -27,6 +29,8 @@ SigLevel = Never
 Server = http://repo.archlinux.fr/\$arch
 EOF
 
+#------------------------------------------------------------
+
 # Create rc user
 sudo useradd -m rc
 echo "rc:0000" | sudo chpasswd
@@ -36,6 +40,8 @@ su - rc
 sudo chown -R rc:rc /home/rc
 sudo chmod -R 700 /home/rc
 
+#------------------------------------------------------------
+
 # Install yay (AUR helper)
 sudo rm -rf yay
 git clone https://aur.archlinux.org/yay.git
@@ -43,30 +49,44 @@ cd yay
 makepkg -si
 cd ..
 
+#------------------------------------------------------------
+
 # Install and configure Snapd
 yay -S --noconfirm snapd
 sudo systemctl enable --now snapd.socket
 sudo snap install figma-linux
 
+#------------------------------------------------------------
+
 # Set Time Zone and Locale
 sudo timedatectl set-timezone America/Sao_Paulo
 sudo localectl set-locale LANG=en_US.UTF-8
+
+#------------------------------------------------------------
 
 # Initialize Pacman keyring
 sudo pacman-key --init
 sudo pacman-key --populate archlinux
 sudo gpg --check-trustdb
 
+#------------------------------------------------------------
+
 # Update Pacman and install necessary packages
 sudo pacman -Syy --needed
 sudo rm -f /var/lib/pacman/db.lck
 sudo pacman -S --noconfirm ufw apparmor openvpn chromium xorg-xinit xorg neofetch lolcat mesa intel-media-driver libva libva-intel-driver libva-utils intel-gpu-tools vulkan-tools vulkan-intel intel-ucode libglvnd
 
+#------------------------------------------------------------
+
 # Verify Vulkan setup
 vulkaninfo | grep "GPU"
 
+#------------------------------------------------------------
+
 # Monitor GPU Performance
 intel_gpu_top
+
+#------------------------------------------------------------
 
 # Create minimal xorg.conf
 sudo tee /etc/X11/xorg.conf <<EOF
@@ -97,6 +117,8 @@ Section "ServerLayout"
 EndSection
 EOF
 
+#------------------------------------------------------------
+
 # Fix mkinitcpio error
 sudo tee /etc/mkinitcpio.d/linux.preset <<EOF
 ALL_config="/etc/mkinitcpio.conf"
@@ -110,8 +132,12 @@ EOF
 sudo mkinitcpio -p linux
 sudo pacman -Syu
 
+#------------------------------------------------------------
+
 # Check system information and firmware
 lsmod | grep xhci_pci && lsmod | grep ast && lsmod | grep aic94xx && lsmod | grep wd719x && dmesg | grep -i firmware
+
+#------------------------------------------------------------
 
 # FAKETIME cleanup
 unset FAKETIME
@@ -121,8 +147,12 @@ grep faketime /etc/profile.d/*
 sudo pacman -R --noconfirm libfaketime
 sudo killall faketime
 
+#------------------------------------------------------------
+
 # Configure Display Brightness
 xrandr --output eDP1 --brightness 0.4
+
+#------------------------------------------------------------
 
 # Harden Kernel Parameters
 sudo tee /etc/sysctl.d/99-custom.conf <<EOF
@@ -144,6 +174,8 @@ vm.mmap_rnd_compat_bits = 16
 EOF
 sudo sysctl --system
 
+#------------------------------------------------------------
+
 # Enable and configure UFW
 sudo systemctl enable --now ufw
 sudo ufw default deny incoming
@@ -151,20 +183,28 @@ sudo ufw default allow outgoing
 sudo ufw allow ssh
 sudo ufw reload
 
+#------------------------------------------------------------
+
 # Disable and mask unnecessary services
 for service in alsa-restore.service getty@tty1.service ip6tables.service iptables.service cups avahi-daemon bluetooth; do
     sudo systemctl disable "$service"
     sudo systemctl mask "$service"
 done
 
+#------------------------------------------------------------
+
 # Prevent overlay
 sudo sed -i 's/ overlay//g' /etc/X11/xorg.conf
 sudo sed -i 's/ allow-overlay//g' /etc/security/limits.conf
+
+#------------------------------------------------------------
 
 # AppArmor setup
 sudo systemctl enable apparmor
 sudo systemctl start apparmor
 sudo aa-enforce /etc/apparmor.d/*
+
+#------------------------------------------------------------
 
 # Install and configure OpenVPN
 sudo pacman -S --noconfirm openvpn
@@ -188,13 +228,19 @@ sudo systemctl enable openvpn@client
 sudo systemctl start openvpn@client
 sudo systemctl status openvpn@client
 
+#------------------------------------------------------------
+
 # Set DNS to Cloudflare
 echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 echo "nameserver 9.9.9.9" | sudo tee -a /etc/resolv.conf
 sudo chattr +i /etc/resolv.conf
 
+#------------------------------------------------------------
+
 # Configure Sudo timeout
 echo 'Defaults timestamp_timeout=5' | sudo tee -a /etc/sudoers
+
+#------------------------------------------------------------
 
 # Secure important files
 for file in "/etc/ssh/sshd_config" "/etc/shadow" "/etc/gshadow" "/etc/passwd" "/etc/group" "/boot" "/etc/sudoers" "/var/log"; do
@@ -202,8 +248,12 @@ for file in "/etc/ssh/sshd_config" "/etc/shadow" "/etc/gshadow" "/etc/passwd" "/
     sudo chown root:root "$file"
 done
 
+#------------------------------------------------------------
+
 # Clean Pacman cache
 sudo pacman -Scc --noconfirm
+
+#------------------------------------------------------------
 
 # Clone and bootstrap GameMode
 git clone https://github.com/FeralInteractive/gamemode.git
@@ -211,12 +261,16 @@ cd gamemode
 ./bootstrap.sh
 cd ..
 
+#------------------------------------------------------------
+
 # Reinstall Firefox
 sudo pacman -Rns firefox
 sudo pacman -Scc
 sudo pacman -S --noconfirm firefox
 rm -rf ~/.mozilla/firefox
 firefox --no-remote -CreateProfile "rc ~/.mozilla/firefox/rc"
+
+#------------------------------------------------------------
 
 # Configure Hardware Acceleration in Firefox (manually)
 firefox -P rc about:config
@@ -226,5 +280,26 @@ firefox -P rc about:config
 # webgl.force-enabled=true
 # media.ffmpeg.vaapi.enabled=true
 
+#------------------------------------------------------------
+
 # Install and prepare Chromium
 sudo pacman -S --noconfirm chromium
+
+#------------------------------------------------------------
+
+# Install yay (AUR helper)
+sudo rm -rf yay
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+cd ..
+
+#------------------------------------------------------------
+
+# Install and configure Snapd
+yay -S --noconfirm snapd
+sudo systemctl enable --now snapd.socket
+sudo ln -s /var/lib/snapd/snap /snap
+sudo snap install figma-linux
+
+
