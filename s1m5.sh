@@ -654,13 +654,12 @@ chromium_flags=(
     --use-vulkan
     --enable-zero-copy
 )
-
 # Launch Chromium with optimized flags
 if chromium "${chromium_flags[@]}" & then
     check_success "Chromium configured and launched"
 else
     echo "Error: Failed to configure and launch Chromium"
     exit 1
-fi
+fi 
 
 echo "Minimal setup completed."
