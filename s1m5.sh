@@ -656,7 +656,7 @@ chromium_flags=(
 )
 
 # Launch Chromium with optimized flags
-if chromium "${chromium_flags[@]}" &; then
+if chromium "${chromium_flags[@]}" & then
     check_success "Chromium configured and launched"
 else
     echo "Error: Failed to configure and launch Chromium"
