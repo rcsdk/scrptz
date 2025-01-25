@@ -291,3 +291,201 @@ By following this guide, you ensure a simple yet secure setup for your Galaxy Bo
 
 Would you like me to help you with any specific part of this process or test configurations?
 
+
+
+
+
+
+
+
+
+Here’s a thorough, step-by-step guide tailored for a non-technical user to implement Option 1 on your Galaxy Book 2 Pro using the USB stick with a 500 MB FAT32 partition (for GRUB) and an EXT4 partition (for the rest of the files). This guide ensures a tamper-proof bootloader and encrypted data for maximum security.
+
+
+---
+
+Prerequisites
+
+1. A Linux environment for preparation (use your current Linux system or a live USB environment).
+
+
+2. The following software/tools installed:
+
+grub
+
+cryptsetup
+
+gparted (for partitioning verification).
+
+
+
+3. Your USB stick with:
+
+500 MB FAT32 partition (for GRUB).
+
+Remaining space as EXT4 (for encrypted storage).
+
+
+
+
+
+---
+
+1. Verify Your Partitions
+
+1. Insert the USB stick into your computer.
+
+
+2. Open a terminal and run:
+
+sudo lsblk
+
+Find your USB stick (e.g., /dev/sdX, where X is the letter assigned to your USB).
+
+
+3. Confirm the partitions:
+
+/dev/sdX1 → 500 MB (FAT32)
+
+/dev/sdX2 → Remaining space (EXT4)
+
+
+
+
+If these partitions are not correct, use a partitioning tool like GParted to fix them. Ensure you set /dev/sdX1 as FAT32 and /dev/sdX2 as EXT4.
+
+
+---
+
+2. Install GRUB on the USB Stick
+
+1. Mount the FAT32 partition:
+
+sudo mount /dev/sdX1 /mnt
+
+
+2. Install GRUB for UEFI:
+
+sudo grub-install --target=x86_64-efi --efi-directory=/mnt --boot-directory=/mnt/boot --removable /dev/sdX
+
+This installs GRUB as a UEFI bootloader on the USB stick.
+
+
+
+3. Verify installation:
+
+ls /mnt/EFI/BOOT
+
+You should see a file named BOOTX64.EFI.
+
+
+4. Unmount the partition:
+
+sudo umount /mnt
+
+
+
+
+---
+
+3. Configure GRUB for Secure Boot
+
+1. Create a GRUB configuration file:
+
+sudo nano /mnt/boot/grub/grub.cfg
+
+
+2. Add the following content to load a secure Linux kernel (replace vmlinuz and initrd paths with actual kernel files you'll use):
+
+set timeout=5
+set default=0
+
+menuentry "Secure Linux" {
+    insmod gzio
+    insmod part_gpt
+    insmod ext2
+    set root=(hd0,gpt2)  # Adjust if necessary
+    linux /boot/vmlinuz-linux root=/dev/mapper/secureusb ro quiet
+    initrd /boot/initramfs-linux.img
+}
+
+
+3. Save and exit (Ctrl+O, Enter, Ctrl+X).
+
+
+
+
+---
+
+4. Encrypt the EXT4 Partition
+
+1. Set up encryption on /dev/sdX2:
+
+sudo cryptsetup luksFormat /dev/sdX2
+
+
+2. Open the encrypted partition:
+
+sudo cryptsetup open /dev/sdX2 secureusb
+
+
+3. Format it as EXT4:
+
+sudo mkfs.ext4 /dev/mapper/secureusb
+
+
+4. Mount the encrypted partition:
+
+sudo mount /dev/mapper/secureusb /mnt
+
+
+5. Create directories for your ISOs and tools:
+
+sudo mkdir /mnt/isos /mnt/tools
+
+
+6. Unmount and close the encrypted partition:
+
+sudo umount /mnt
+sudo cryptsetup close secureusb
+
+
+
+
+---
+
+5. Test the USB Stick
+
+1. Reboot your laptop and enter the boot menu (usually by pressing F10, F12, or Esc during startup).
+
+
+2. Select your USB stick as the boot device.
+
+
+3. GRUB should load and display the menu you configured.
+
+
+4. If you see your menu entry and can boot into a Linux environment, the setup is working.
+
+
+
+
+---
+
+6. Secure the USB Stick
+
+1. Make the FAT32 partition read-only:
+
+Use a write-protect switch on the USB (if available) or avoid writing to this partition after setup.
+
+
+
+2. Always use the encrypted partition for storing sensitive tools and ISOs.
+
+
+
+
+---
+
+Would you like me to clarify any steps or expand on the testing phase?
+
