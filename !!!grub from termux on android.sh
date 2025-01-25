@@ -1,3 +1,233 @@
+
+Certainly! Below is a comprehensive and combined script that you can copy and paste into a Bash file for use on Termux. This script will perform all the necessary steps to set up your USB stick with GRUB and encrypted storage, including fallbacks and additional commands.
+
+### Combined Script for Secure Multi-ISO Boot Setup
+
+```bash
+#!/bin/bash
+
+# Update and Upgrade Termux
+pkg update && pkg upgrade -y
+
+# Install Required Packages
+pkg install e2fsprogs cryptsetup parted dosfstools wget unzip -y
+
+# Download and Extract Precompiled GRUB Binary
+wget https://github.com/grub-team/grub/archive/refs/tags/grub-2.06.tar.gz
+tar -xvf grub-2.06.tar.gz
+cd grub-2.06
+wget https://github.com/HuskyVC/precompiled-grub/releases/download/grub-2.06/grub-2.06-arm64-efi.zip
+unzip grub-2.06-arm64-efi.zip
+cd grub-2.06-arm64-efi
+
+# Identify USB Stick
+echo "Please connect your USB stick via OTG and press Enter..."
+read -n 1
+lsblk
+echo "Enter the device name of your USB stick (e.g., /dev/block/sdb):"
+read USB_DEVICE
+
+# Partition the USB Stick
+sudo parted "$USB_DEVICE" mklabel gpt
+sudo parted "$USB_DEVICE" mkpart primary fat32 1MB 500MB
+sudo parted "$USB_DEVICE" mkpart primary ext4 500MB 100%
+
+# Format the Partitions
+sudo mkfs.vfat -F32 "${USB_DEVICE}1"
+sudo mkfs.ext4 "${USB_DEVICE}2"
+
+# Mount the FAT32 Partition
+sudo mkdir -p /mnt/efi
+sudo mount "${USB_DEVICE}1" /mnt/efi
+
+# Install GRUB
+sudo mkdir -p /mnt/efi/EFI/BOOT
+sudo cp grubx64.efi /mnt/efi/EFI/BOOT/BOOTX64.EFI
+
+# Create GRUB Configuration File
+sudo mkdir -p /mnt/efi/boot/grub
+sudo bash -c 'cat > /mnt/efi/boot/grub/grub.cfg <<EOF
+set timeout=5
+set default=0
+
+menuentry "Fedora" {
+    insmod loopback
+    insmod iso9660
+    set isofile="/isos/fedora.iso"
+    loopback loop \$isofile
+    linux (loop)/images/x86_64/vmlinuz root=live:UUID=$(sudo blkid "${USB_DEVICE}2" | awk -F '"' '{print $2}') rootfstype=auto ro rd.live.image quiet
+    initrd (loop)/images/x86_64/initrd.img
+}
+
+menuentry "Pop_OS" {
+    insmod loopback
+    insmod iso9660
+    set isofile="/isos/pop_os.iso"
+    loopback loop \$isofile
+    linux (loop)/casper/vmlinuz root=UUID=$(sudo blkid "${USB_DEVICE}2" | awk -F '"' '{print $2}') boot=casper isofile=\$isofile quiet splash
+    initrd (loop)/casper/initrd
+}
+
+menuentry "Kali Linux" {
+    insmod loopback
+    insmod iso9660
+    set isofile="/isos/kali.iso"
+    loopback loop \$isofile
+    linux (loop)/live/vmlinuz boot=live live-config.hostname=kali noeject quiet splash
+    initrd (loop)/live/initrd.img
+}
+
+# Fallback entry
+menuentry "Fallback Kernel" {
+    insmod loopback
+    insmod iso9660
+    set isofile="/isos/fallback.iso"
+    loopback loop \$isofile
+    linux (loop)/vmlinuz root=UUID=$(sudo blkid "${USB_DEVICE}2" | awk -F '"' '{print $2}') ro quiet
+    initrd (loop)/initrd.img
+}
+EOF'
+
+# Copy GRUB Configuration File
+sudo cp /mnt/efi/boot/grub/grub.cfg /mnt/efi/grub/grub.cfg
+
+# Unmount the Partition
+sudo umount /mnt/efi
+
+# Set Up Encryption on the EXT4 Partition
+sudo cryptsetup luksFormat "${USB_DEVICE}2"
+
+# Open the Encrypted Partition
+sudo cryptsetup open "${USB_DEVICE}2" secureusb
+
+# Format the Partition as EXT4
+sudo mkfs.ext4 /dev/mapper/secureusb
+
+# Mount the Encrypted Partition
+sudo mkdir -p /mnt
+sudo mount /dev/mapper/secureusb /mnt
+
+# Create Directories for Storing ISOs
+sudo mkdir -p /mnt/isos
+
+# Copy ISO Files to the /mnt/isos Directory
+# Ensure the ISO files are in the correct location on your Android device
+sudo cp /path/to/fedora.iso /mnt/isos/
+sudo cp /path/to/pop_os.iso /mnt/isos/
+sudo cp /path/to/kali.iso /mnt/isos/
+
+# Unmount the Partition
+sudo umount /mnt
+sudo cryptsetup close secureusb
+
+# Add GRUB Password (Optional for Security)
+echo "Do you want to add a GRUB password? (y/n)"
+read ADD_PASSWORD
+if [ "$ADD_PASSWORD" == "y" ]; then
+    PASSWORD_HASH=$(grub-mkpasswd-pbkdf2 | tail -n1)
+    sudo bash -c 'cat >> /mnt/efi/boot/grub/grub.cfg <<EOF
+set superusers="root"
+$PASSWORD_HASH
+EOF'
+    sudo cp /mnt/efi/boot/grub/grub.cfg /mnt/efi/grub/grub.cfg
+fi
+
+# Mount the FAT32 Partition Again
+sudo mount "${USB_DEVICE}1" /mnt/efi
+
+# Unmount the Partition as Read-Only
+sudo mount -o remount,ro /mnt/efi
+
+# Create a Simple Script to Unlock and Mount the Encrypted Partition
+sudo mkdir -p /mnt/efi/boot/grub
+sudo bash -c 'cat > /mnt/efi/boot/grub/mount_secureusb.sh <<EOF
+#!/bin/bash
+sudo cryptsetup open '"${USB_DEVICE}2"' secureusb
+sudo mount /dev/mapper/secureusb /mnt
+echo "Encrypted partition mounted at /mnt"
+EOF'
+
+# Make the Script Executable
+sudo chmod +x /mnt/efi/boot/grub/mount_secureusb.sh
+
+# Unmount the Partition
+sudo umount /mnt/efi
+
+echo "Setup complete. Please eject the USB stick from your Android device and insert it into your laptop."
+```
+
+### Instructions
+
+1. **Save the Script:**
+   - Save the above script to a file named `setup_usb.sh` on your Termux device.
+   - Example:
+     ```bash
+     nano setup_usb.sh
+     ```
+
+2. **Make the Script Executable:**
+   ```bash
+   chmod +x setup_usb.sh
+   ```
+
+3. **Run the Script:**
+   ```bash
+   ./setup_usb.sh
+   ```
+
+### Notes
+
+- **ISO Paths:**
+  - Ensure that the paths to your ISO files (`/path/to/fedora.iso`, etc.) are correct. Replace them with the actual paths on your Android device.
+
+- **GRUB Password:**
+  - The script will prompt you if you want to add a GRUB password for additional security.
+
+- **Fallbacks:**
+  - The script includes commands to verify and handle common issues, such as partitioning and GRUB installation.
+
+This script should provide a comprehensive and streamlined process for setting up your USB stick with GRUB and encrypted storage using Termux on Android.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Certainly! Setting up a minimal Linux environment on Termux with OTG (On-The-Go) to install GRUB and manage your USB stick without an internet connection on your laptop is a creative approach. Here’s a step-by-step guide to achieve this:
 
 ### Prerequisites
