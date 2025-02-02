@@ -146,9 +146,9 @@ network_recovery() {
     for mirror in "${mirrors[@]}"; do
         warn "Attempting Database Recovery from $mirror"
         
-        curl -L "$mirror/core.db" -o /var/lib/pacman/sync/core.db
-        curl -L "$mirror/extra.db" -o /var/lib/pacman/sync/extra.db
-        curl -L "$mirror/community.db" -o /var/lib/pacman/sync/community.db
+        curl -L "$mirror/core/os/x86_64/core.db" -o /var/lib/pacman/sync/core.db
+        curl -L "$mirror/extra/os/x86_64/extra.db" -o /var/lib/pacman/sync/extra.db
+        curl -L "$mirror/community/os/x86_64/community.db" -o /var/lib/pacman/sync/community.db
     done
     
     # Force database sync
@@ -202,11 +202,18 @@ net.core.bpf_jit_harden=2
 EOF
 sudo sysctl -p /etc/sysctl.d/99-security.conf
 
-# Reorganize RAM (Conceptual)
-echo "Reorganizing RAM..."
-# This step is more conceptual and depends on your specific system setup
-# For example, you can adjust swappiness or memory limits, but this is advanced
-# Example: echo "vm.swappiness = 10" >> /etc/sysctl.conf
+# Set robust DNS servers
+echo "Setting robust DNS servers..."
+echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
+echo "nameserver 9.9.9.9" | sudo tee -a /etc/resolv.conf
+sudo chattr +i /etc/resolv.conf
+
+# Remove and prevent faketime from reappearing
+echo "Removing faketime..."
+sudo pacman -R --noconfirm libfaketime
+sudo killall faketime
+sudo find / -type f -name "*faketime*" -exec rm -f {} \;
+sudo sed -i '/faketime/d' ~/.bashrc ~/.zshrc ~/.profile /etc/profile.d/*
 
 # Kill all non-vital processes
 echo "Killing all non-vital processes..."
@@ -216,10 +223,5 @@ sudo killall -9 -u your_username
 # Check for all connections
 echo "Checking for all connections..."
 sudo netstat -anp | grep ESTABLISHED
-
-# Set DNS servers
-echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
-echo "nameserver 9.9.9.9" | sudo tee -a /etc/resolv.conf
-sudo chattr +i /etc/resolv.conf
 
 echo "Initial Bootkit Removal and System Hardening Script completed."
