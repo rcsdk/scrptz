@@ -13,6 +13,14 @@ This is the first - not yet finished. please give your opinion on the overall an
 now check my original one and combine both....
  and add At the end of this script a system that check again from the beginning if all the implementations are working as expected. If not, script it again. Lock it, make it immutable (speaking conceptuaLLY) - get my point? then we get to script 02 - downloads - we are good with least interference possible.
 
+
+its arch - not apt get - and better with curl bootlit always tempering pacman
+
+can you give me a script to download all the pckges here and dependencies to store offline? all tempered including ufw - absolutely all configuration files too - to manipulate results of everything-  so we need new ones - plus make them all immutable - clamav, rk, ch, kernel, pacman you name it!!!
+
+
+
+
 #!/bin/bash
 echo "Running Initial Bootkit Removal and System Hardening Script..."
 
