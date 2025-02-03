@@ -349,3 +349,670 @@ main() {
 main
 
 echo "Initial Bootkit Removal and System Hardening Script completed."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#!/bin/bash
+echo "Running Package Download and Configuration Hardening Script..."
+
+# Timestamp and Locale
+echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
+sudo timedatectl set-timezone America/Sao_Paulo
+sudo localectl set-locale LANG=en_US.UTF-8
+
+# Color Codes for Enhanced Readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Logging Functions
+log() {
+    echo -e "${GREEN}[+] $1${NC}"
+}
+
+warn() {
+    echo -e "${YELLOW}[!] $1${NC}"
+}
+
+error() {
+    echo -e "${RED}[ERROR] $1${NC}" >&2
+    exit 1
+}
+
+# Pre-Flight Checks
+preflight_check() {
+    # Ensure script is run as root
+    if [[ $EUID -ne 0 ]]; then
+        error "This script must be run as root. Use sudo or run as root."
+    fi
+
+    # Check for Arch Linux
+    if [[ ! -f /etc/arch-release ]]; then
+        error "This script is designed for Arch Linux systems only."
+    fi
+
+    # Check network connectivity
+    if ! ping -c 4 archlinux.org > /dev/null 2>&1; then
+        error "No network connectivity. Cannot proceed."
+    fi
+
+    # Check architecture
+    if [[ $(uname -m) != "x86_64" ]]; then
+        error "This script is designed for x86_64 architecture only."
+    fi
+
+    # Check available disk space
+    if [[ $(df / --output=avail | tail -n 1) -lt 5242880 ]]; then
+        error "Not enough disk space available. Cannot proceed."
+    fi
+}
+
+# Download Packages and Dependencies
+download_packages() {
+    log "Downloading Packages and Dependencies..."
+    sudo pacman -Syu --noconfirm
+
+    PACKAGES=(
+        ufw
+        clamav
+        rkhunter
+        chkrootkit
+        fail2ban
+        aide
+        cronie
+        rsync
+        selinux
+        ossec-hids
+        snort
+        linux
+        linux-firmware
+        pacman
+    )
+
+    mkdir -p /var/cache/pacman/pkg/offline
+    for package in "${PACKAGES[@]}"; do
+        sudo pacman -Sw --noconfirm "$package"
+        sudo pacman -S --cachedir=/var/cache/pacman/pkg/offline --noconfirm "$package"
+    done
+
+    log "Packages and dependencies downloaded to /var/cache/pacman/pkg/offline"
+}
+
+# Backup Configuration Files
+backup_configs() {
+    log "Backing up Configuration Files..."
+    CONFIG_DIRS=(
+        /etc/ufw
+        /etc/clamav
+        /etc/rkhunter.conf
+        /etc/chkrootkit.conf
+        /etc/fail2ban
+        /etc/aide
+        /etc/cronie
+        /etc/rsyncd.conf
+        /etc/selinux
+        /etc/ossec
+        /etc/snort
+        /etc/default/grub
+        /etc/pacman.conf
+        /etc/pacman.d
+    )
+
+    mkdir -p /var/cache/pacman/pkg/offline/configs
+    for dir in "${CONFIG_DIRS[@]}"; do
+        if [[ -d "$dir" ]]; then
+            sudo cp -r "$dir" /var/cache/pacman/pkg/offline/configs/
+        elif [[ -f "$dir" ]]; then
+            sudo cp "$dir" /var/cache/pacman/pkg/offline/configs/
+        fi
+    done
+
+    log "Configuration files backed up to /var/cache/pacman/pkg/offline/configs"
+}
+
+# Make Configuration Files Immutable
+make_immutable() {
+    log "Making Configuration Files Immutable..."
+    sudo chattr +i -R /var/cache/pacman/pkg/offline/configs
+    log "Configuration files are now immutable."
+}
+
+# Main Execution
+main() {
+    clear
+    log "🔧 Package Download and Configuration Hardening Script 🔧"
+
+    preflight_check
+    download_packages
+    backup_configs
+    make_immutable
+
+    log "Script Completed. Packages and configurations are ready for offline use."
+}
+
+# Execute Main Function
+main
+
+echo "Package Download and Configuration Hardening Script completed."
+
+
+
+
+
+#!/bin/bash
+echo "Running Breach Detection Script..."
+
+# Timestamp and Locale
+echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
+sudo timedatectl set-timezone America/Sao_Paulo
+sudo localectl set-locale LANG=en_US.UTF-8
+
+# Color Codes for Enhanced Readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Logging Functions
+log() {
+    echo -e "${GREEN}[+] $1${NC}"
+}
+
+warn() {
+    echo -e "${YELLOW}[!] $1${NC}"
+}
+
+error() {
+    echo -e "${RED}[ERROR] $1${NC}" >&2
+    exit 1
+}
+
+# Pre-Flight Checks
+preflight_check() {
+    # Ensure script is run as root
+    if [[ $EUID -ne 0 ]]; then
+        error "This script must be run as root. Use sudo or run as root."
+    fi
+
+    # Check for Arch Linux
+    if [[ ! -f /etc/arch-release ]]; then
+        error "This script is designed for Arch Linux systems only."
+    fi
+
+    # Check network connectivity
+    if ! ping -c 4 archlinux.org > /dev/null 2>&1; then
+        error "No network connectivity. Cannot proceed."
+    fi
+
+    # Check architecture
+    if [[ $(uname -m) != "x86_64" ]]; then
+        error "This script is designed for x86_64 architecture only."
+    fi
+}
+
+# Check for Hidden Services
+check_hidden_services() {
+    log "Checking for Hidden Services..."
+    sudo netstat -tulnp | grep LISTEN
+    sudo lsof -i -P -n | grep LISTEN
+}
+
+# Check for Open Ports
+check_open_ports() {
+    log "Checking for Open Ports..."
+    sudo nmap -sT -O localhost
+}
+
+# Check for Hidden SSH
+check_hidden_ssh() {
+    log "Checking for Hidden SSH Services..."
+    sudo netstat -tulnp | grep ssh
+}
+
+# Check for Kernel Integrity
+check_kernel_integrity() {
+    log "Checking for Kernel Integrity..."
+    sudo dmesg | grep -i integrity
+}
+
+# Check for Configuration Tampering
+check_config_tampering() {
+    log "Checking for Configuration Tampering..."
+    CONFIG_DIRS=(
+        /etc/ufw
+        /etc/clamav
+        /etc/rkhunter.conf
+        /etc/chkrootkit.conf
+        /etc/fail2ban
+        /etc/aide
+        /etc/cronie
+        /etc/rsyncd.conf
+        /etc/selinux
+        /etc/ossec
+        /etc/snort
+        /etc/default/grub
+        /etc/pacman.conf
+        /etc/pacman.d
+    )
+
+    for dir in "${CONFIG_DIRS[@]}"; do
+        sudo sha256sum "$dir"
+    done
+}
+
+# Check for Rootkits
+check_rootkits() {
+    log "Checking for Rootkits..."
+    sudo rkhunter --check
+    sudo chkrootkit
+}
+
+# Check for Malware
+check_malware() {
+    log "Checking for Malware..."
+    sudo freshclam
+    sudo clamscan -r / --bell -i
+}
+
+# Check for Unauthorized Changes
+check_unauthorized_changes() {
+    log "Checking for Unauthorized Changes..."
+    sudo aide --check
+}
+
+# Check for Log Tampering
+check_log_tampering() {
+    log "Checking for Log Tampering..."
+    sudo sha256sum /var/log/*
+}
+
+# Check for Network Breaches
+check_network_breaches() {
+    log "Checking for Network Breaches..."
+    sudo snort -A console -q -c /etc/snort/snort.conf
+}
+
+# Main Execution
+main() {
+    clear
+    log "🔧 Breach Detection Script 🔧"
+
+    preflight_check
+    check_hidden_services
+    check_open_ports
+    check_hidden_ssh
+    check_kernel_integrity
+    check_config_tampering
+    check_rootkits
+    check_malware
+    check_unauthorized_changes
+    check_log_tampering
+    check_network_breaches
+
+    log "Script Completed. Breach detection checks are done."
+}
+
+# Execute Main Function
+main
+
+echo "Breach Detection Script completed."
+
+
+
+
+
+
+#!/bin/bash
+echo "Running Security Setup Script..."
+
+# Timestamp and Locale
+echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
+sudo timedatectl set-timezone America/Sao_Paulo
+sudo localectl set-locale LANG=en_US.UTF-8
+
+# Color Codes for Enhanced Readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Logging Functions
+log() {
+    echo -e "${GREEN}[+] $1${NC}"
+}
+
+warn() {
+    echo -e "${YELLOW}[!] $1${NC}"
+}
+
+error() {
+    echo -e "${RED}[ERROR] $1${NC}" >&2
+    exit 1
+}
+
+# Pre-Flight Checks
+preflight_check() {
+    # Ensure script is run as root
+    if [[ $EUID -ne 0 ]]; then
+        error "This script must be run as root. Use sudo or run as root."
+    fi
+
+    # Check for Arch Linux
+    if [[ ! -f /etc/arch-release ]]; then
+        error "This script is designed for Arch Linux systems only."
+    fi
+
+    # Check network connectivity
+    if ! ping -c 4 archlinux.org > /dev/null 2>&1; then
+        error "No network connectivity. Cannot proceed."
+    fi
+
+    # Check architecture
+    if [[ $(uname -m) != "x86_64" ]]; then
+        error "This script is designed for x86_64 architecture only."
+    fi
+}
+
+# Install and Configure Firewall
+configure_firewall() {
+    log "Configuring Firewall..."
+    sudo pacman -S --noconfirm ufw
+    sudo ufw default deny incoming
+    sudo ufw default allow outgoing
+    sudo ufw allow ssh
+    sudo ufw allow 80/tcp
+    sudo ufw enable
+    sudo ufw status
+}
+
+# Install and Configure ClamAV
+configure_clamav() {
+    log "Configuring ClamAV..."
+    sudo pacman -S --noconfirm clamav
+    sudo freshclam
+    sudo systemctl enable clamav-daemon
+    sudo systemctl start clamav-daemon
+}
+
+# Install and Configure rkhunter
+configure_rkhunter() {
+    log "Configuring rkhunter..."
+    sudo pacman -S --noconfirm rkhunter
+    sudo rkhunter --propupd
+    sudo rkhunter --check
+}
+
+# Install and Configure chkrootkit
+configure_chkrootkit() {
+    log "Configuring chkrootkit..."
+    sudo pacman -S --noconfirm chkrootkit
+    sudo chkrootkit
+}
+
+# Install and Configure Fail2Ban
+configure_fail2ban() {
+    log "Configuring Fail2Ban..."
+    sudo pacman -S --noconfirm fail2ban
+    sudo systemctl enable fail2ban
+    sudo systemctl start fail2ban
+    sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+    sudo sed -i 's/^#\?\(bantime\s*=\s*\).*\$/\1900/' /etc/fail2ban/jail.local
+    sudo sed -i 's/^#\?\(findtime\s*=\s*\).*\$/\1600/' /etc/fail2ban/jail.local
+    sudo sed -i 's/^#\?\(maxretry\s*=\s*\).*\$/\13/' /etc/fail2ban/jail.local
+    sudo systemctl restart fail2ban
+}
+
+# Install and Configure AIDE
+configure_aide() {
+    log "Configuring AIDE..."
+    sudo pacman -S --noconfirm aide
+    sudo aideinit
+    sudo aide --check
+}
+
+# Install and Configure Cronie
+configure_cronie() {
+    log "Configuring Cronie..."
+    sudo pacman -S --noconfirm cronie
+    sudo systemctl enable cronie
+    sudo systemctl start cronie
+}
+
+# Install and Configure SELinux
+configure_selinux() {
+    log "Configuring SELinux..."
+    sudo pacman -S --noconfirm selinux
+    sudo selinux-activate
+    sudo sestatus
+}
+
+# Install and Configure OSSEC
+configure_ossec() {
+    log "Configuring OSSEC..."
+    sudo pacman -S --noconfirm ossec-hids
+    sudo systemctl enable ossec
+    sudo systemctl start ossec
+}
+
+# Install and Configure Snort
+configure_snort() {
+    log "Configuring Snort..."
+    sudo pacman -S --noconfirm snort
+    sudo systemctl enable snort
+    sudo systemctl start snort
+}
+
+# Main Execution
+main() {
+    clear
+    log "🔧 Security Setup Script 🔧"
+
+    preflight_check
+    configure_firewall
+    configure_clamav
+    configure_rkhunter
+    configure_chkrootkit
+    configure_fail2ban
+    configure_aide
+    configure_cronie
+    configure_selinux
+    configure_ossec
+    configure_snort
+
+    log "Script Completed. Security setup is done."
+}
+
+# Execute Main Function
+main
+
+echo "Security Setup Script completed."
+
+
+
+
+
+
+
+#!/bin/bash
+echo "Running Final Check Script..."
+
+# Timestamp and Locale
+echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
+sudo timedatectl set-timezone America/Sao_Paulo
+sudo localectl set-locale LANG=en_US.UTF-8
+
+# Color Codes for Enhanced Readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Logging Functions
+log() {
+    echo -e "${GREEN}[+] $1${NC}"
+}
+
+warn() {
+    echo -e "${YELLOW}[!] $1${NC}"
+}
+
+error() {
+    echo -e "${RED}[ERROR] $1${NC}" >&2
+    exit 1
+}
+
+# Pre-Flight Checks
+preflight_check() {
+    # Ensure script is run as root
+    if [[ $EUID -ne 0 ]]; then
+        error "This script must be run as root. Use sudo or run as root."
+    fi
+
+    # Check for Arch Linux
+    if [[ ! -f /etc/arch-release ]]; then
+        error "This script is designed for Arch Linux systems only."
+    fi
+
+    # Check network connectivity
+    if ! ping -c 4 archlinux.org > /dev/null 2>&1; then
+        error "No network connectivity. Cannot proceed."
+    fi
+
+    # Check architecture
+    if [[ $(uname -m) != "x86_64" ]]; then
+        error "This script is designed for x86_64 architecture only."
+    fi
+}
+
+# Re-check for Hidden Services
+recheck_hidden_services() {
+    log "Re-checking for Hidden Services..."
+    sudo netstat -tulnp | grep LISTEN
+    sudo lsof -i -P -n | grep LISTEN
+}
+
+# Re-check for Open Ports
+recheck_open_ports() {
+    log "Re-checking for Open Ports..."
+    sudo nmap -sT -O localhost
+}
+
+# Re-check for Hidden SSH
+recheck_hidden_ssh() {
+    log "Re-checking for Hidden SSH Services..."
+    sudo netstat -tulnp | grep ssh
+}
+
+# Re-check for Kernel Integrity
+recheck_kernel_integrity() {
+    log "Re-checking for Kernel Integrity..."
+    sudo dmesg | grep -i integrity
+}
+
+# Re-check for Configuration Tampering
+recheck_config_tampering() {
+    log "Re-checking for Configuration Tampering..."
+    CONFIG_DIRS=(
+        /etc/ufw
+        /etc/clamav
+        /etc/rkhunter.conf
+        /etc/chkrootkit.conf
+        /etc/fail2ban
+        /etc/aide
+        /etc/cronie
+        /etc/rsyncd.conf
+        /etc/selinux
+        /etc/ossec
+        /etc/snort
+        /etc/default/grub
+        /etc/pacman.conf
+        /etc/pacman.d
+    )
+
+    for dir in "${CONFIG_DIRS[@]}"; do
+        sudo sha256sum "$dir"
+    done
+}
+
+# Re-check for Rootkits
+recheck_rootkits() {
+    log "Re-checking for Rootkits..."
+    sudo rkhunter --check
+    sudo chkrootkit
+}
+
+# Re-check for Malware
+recheck_malware() {
+    log "Re-checking for Malware..."
+    sudo freshclam
+    sudo clamscan -r / --bell -i
+}
+
+# Re-check for Unauthorized Changes
+recheck_unauthorized_changes() {
+    log "Re-checking for Unauthorized Changes..."
+    sudo aide --check
+}
+
+# Re-check for Log Tampering
+recheck_log_tampering() {
+    log "Re-checking for Log Tampering..."
+    sudo sha256sum /var/log/*
+}
+
+# Re-check for Network Breaches
+recheck_network_breaches() {
+    log "Re-checking for Network Breaches..."
+    sudo snort -A console -q -c /etc/snort/snort.conf
+}
+
+# Main Execution
+main() {
+    clear
+    log "🔧 Final Check Script 🔧"
+
+    preflight_check
+    recheck_hidden_services
+    recheck_open_ports
+    recheck_hidden_ssh
+    recheck_kernel_integrity
+    recheck_config_tampering
+    recheck_rootkits
+    recheck_malware
+    recheck_unauthorized_changes
+    recheck_log_tampering
+    recheck_network_breaches
+
+    log "Script Completed. Final checks are done."
+}
+
+# Execute Main Function
+main
+
+echo "Final Check Script completed."
+
+
+
+
+
+
+
+
+
+
