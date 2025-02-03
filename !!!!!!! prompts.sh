@@ -5,10 +5,13 @@ i want to develop 04 scripts.
 03 - download and setup all security - firewall, etc etc etc - centralizing all logs - in a single place - minimum files as possible - condensing and creating files based on interpretation of really matters (I always feel there is 90% garbage)
 04 - check all the above again - to be sure they are working and will continue to work once malware coming from vram - can temper whatever he wants - creating a lot of confusion - eg. didnt we fix DNS already?? (and the same for EVERYTHING - so its very confusing...)
 
+now check my original one and combine both....
+
 
 This is the first - not yet finished. please give your opinion on the overall and improvements suggestions
 
-At the end of this script I want to add a system that check again from the beginning if all the implementations are working as expected. If not, script it again. Lock it, make it immutable (speaking conceptuaLLY) - get my point? then we get to script 02 - downloads - we are good with least interference possible.
+now check my original one and combine both....
+ and add At the end of this script a system that check again from the beginning if all the implementations are working as expected. If not, script it again. Lock it, make it immutable (speaking conceptuaLLY) - get my point? then we get to script 02 - downloads - we are good with least interference possible.
 
 #!/bin/bash
 echo "Running Initial Bootkit Removal and System Hardening Script..."
