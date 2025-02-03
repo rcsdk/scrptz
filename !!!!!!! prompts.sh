@@ -18,6 +18,11 @@ its arch - not apt get - and better with curl bootlit always tempering pacman
 
 can you give me a script to download all the pckges here and dependencies to store offline? all tempered including ufw - absolutely all configuration files too - to manipulate results of everything-  so we need new ones - plus make them all immutable - clamav, rk, ch, kernel, pacman you name it!!!
 
+lets also add SELinux + OSSEC + Snort (let me know if i need to create profiles for them0 also download them so I have literally everything on the stick - wheN I download he tempers - big vector there - lets download all these AND ALL on ther other scripts  - secure folder, then secure folder on usb stick - need scripts for these - but separate. the on these we need to install them befor usign and configurinig - and again- qt the end - checking f it s working - 0
+Configuring SELinux or AppArmor to provide an additional layer of security.
+Installing and configuring a host-based intrusion detection system (HIDS) such as OSSEC to monitor for suspicious activity.
+
+
 
 
 
