@@ -247,16 +247,6 @@ deactivate_ipv6() {
     sysctl -p
 }
 
-# Close all ports but browsers
-close_ports() {
-    log "Closing all ports but browsers..."
-    sudo ufw enable
-    sudo ufw default deny incoming
-    sudo ufw default allow outgoing
-    sudo ufw allow 80/tcp
-    sudo ufw allow 443/tcp
-}
-
 # Harden kernel
 harden_kernel() {
     log "Hardening kernel..."
