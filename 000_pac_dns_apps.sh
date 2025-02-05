@@ -56,6 +56,7 @@ chattr +i /etc/resolv.conf
 echo "DNS secured and locked."
 
 # Update system and install packages from local repo if available
+rm -f /var/lib/pacman/db.lck
 sudo pacman -Syu --noconfirm --needed
 
 for pkg in "${PACKAGES[@]}"; do
