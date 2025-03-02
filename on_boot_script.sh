@@ -263,7 +263,6 @@ bluetooth_security() {
     log "[Category: Bluetooth Security] Completed with status: $cat_status"
     return $cat_status
 }
-
 #######################################
 # Category 3: Network Service Hardening
 # Instruction: $INST_NET
