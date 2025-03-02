@@ -6,12 +6,24 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Function to wait for the apt lock release
+wait_for_apt_lock() {
+    while ! apt update; do
+        echo "Apt lock detected. Identifying and terminating the process holding the lock..."
+        LOCK_PID=$(lsof /var/lib/apt/lists/lock | awk 'NR==2 {print $2}')
+        if [ -n "$LOCK_PID" ]; then
+            echo "Killing process $LOCK_PID holding the lock..."
+            kill -9 "$LOCK_PID"
+        else
+            echo "No process found holding the lock. Retrying..."
+        fi
+        sleep 5
+    done
+}
+
 # Update system and install basic tools
 echo "Updating system and installing tools (wget, curl, etc.)..."
-while ! apt update; do
-    echo "Waiting for apt lock to release..."
-    sleep 5
-done
+wait_for_apt_lock
 apt upgrade -y
 apt install -y wget curl xfce4-whiskermenu-plugin
 
@@ -71,12 +83,25 @@ fi
 
 # Install Variety Wallpaper Manager
 echo "Installing Variety..."
+wait_for_apt_lock
 apt install -y variety || {
     echo "Adding Variety PPA for latest version..."
     add-apt-repository ppa:variety/stable -y
-    apt update
+    wait_for_apt_lock
     apt install -y variety
 }
+
+# Install Sticky Notes
+echo "Installing Sticky Notes..."
+STICKY_VERSION="1.0"  # Check https://github.com/linuxmint/sticky for the latest version
+wget -O sticky.deb "http://packages.linuxmint.com/pool/main/s/sticky/sticky_${STICKY_VERSION}_all.deb"
+if [ -f sticky.deb ]; then
+    dpkg -i sticky.deb
+    apt install -f -y
+    rm sticky.deb
+else
+    echo "Failed to download Sticky. Check the URL or internet connection."
+fi
 
 # --- Ensure Whisker Menu Works (10 Checks) ---
 echo "Ensuring Whisker Menu functionality..."
@@ -84,6 +109,7 @@ echo "Ensuring Whisker Menu functionality..."
 # 1. Verify Whisker Menu is installed
 if ! dpkg -l | grep -q xfce4-whiskermenu-plugin; then
     echo "Whisker Menu not installed. Installing now..."
+    wait_for_apt_lock
     apt install -y xfce4-whiskermenu-plugin
 fi
 
@@ -150,7 +176,7 @@ if [ -f "$MENU_FILE" ]; then
 fi
 
 # Assign apps to My Apps category
-for app in joplin obsidian super-productivity variety; do
+for app in joplin obsidian super-productivity variety sticky; do
     if [ -f "/usr/share/applications/${app}.desktop" ]; then
         sed -i 's/Categories=.*/Categories=My Apps;/' "/usr/share/applications/${app}.desktop"
     fi
@@ -160,5 +186,5 @@ done
 update-desktop-database
 
 echo "Installation complete!"
-echo "Check the Whisker Menu for a 'My Apps' category containing Super Productivity, Joplin, Obsidian, and Variety."
+echo "Check the Whisker Menu for a 'My Apps' category containing Super Productivity, Joplin, Obsidian, Variety, and Sticky."
 echo "If the category doesn't appear, log out and log back in."
